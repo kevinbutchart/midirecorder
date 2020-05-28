@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+.btn {
+    background-color: DodgerBlue;
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: RoyalBlue;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script>
+var playsocket = new WebSocket('ws://' + location.host + '/play');
+
+var mainsocket = new WebSocket('ws://' + location.host + '/main');
+
+mainsocket.onmessage = function(event) {
+   var today = document.getElementById('todayrec');
+   var arr = JSON.parse(event.data)
+   for (var i=0; i < arr.length; i++) {
+	var rec = arr[i];  
+	var r = today.insertRow()
+	cell1 = r.insertCell();
+	cell2 = r.insertCell();
+	cell3 = r.insertCell();
+	cell4 = r.insertCell();
+	cell1.innerHTML=rec.name
+	cell2.innerHTML=rec.duration
+	cell3.innerHTML="<button class=btn onclick=\"play('" + rec.fullname + "')\"><i class=\"fa fa-play\"></i></button>"
+	cell4.innerHTML="<button class=btn onclick=\"stop()\"><i class=\"fa fa-stop\"></i></button>"
+   }
+}
+
+function play(file)
+{    
+	playsocket.send("play " + file)
+}
+
+function stop()
+{    
+	playsocket.send("stop")
+}
+</script>
+
+</head>
+<body>
+	<h1> Midi Recorder </h1>
+	<h2> Recordings </h2>
+	<div id="recordings">
+		<table id="todayrec">
+		</table>	
+	</div>
+</body>
+</html>

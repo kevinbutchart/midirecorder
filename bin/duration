@@ -1,0 +1,4 @@
+#!/bin/bash
+calc(){ awk "BEGIN { print "$*" }"; }
+TIME_MS=$(durations $1 | tail -n 1 | awk {'print $1'})
+calc $TIME_MS/1000.0

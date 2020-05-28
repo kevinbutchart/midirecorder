@@ -1,0 +1,12 @@
+#!/bin/bash
+FILES=$(listfiles $1)
+for f in $FILES
+do
+    infoname=${f%.mid}.json
+
+    [ ! -f $infoname ] && {
+        duration=$(duration "$f")
+        name=$(basename "$f") 
+	echo "{ \"fullname\" : \"$f\", \"name\" : \"$name\", \"duration\" : \"$duration\" }" > $infoname
+    }
+done

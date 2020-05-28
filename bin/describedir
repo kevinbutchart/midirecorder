@@ -1,0 +1,12 @@
+#!/bin/bash
+DIR="$1"
+createjson "$DIR"
+FILES=$(ls $1/*.json)
+FILES=$(basename -a $FILES | sort -n -r )
+str="["
+for f in $FILES
+do
+   str+="$(cat $DIR/$f),"
+done
+str=${str%?}"]"
+echo $str

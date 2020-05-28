@@ -1,0 +1,30 @@
+#!/bin/bash
+playerpid=-1
+
+start_player() {
+    aplaymidi -p 20:0 "$1"&
+}
+
+stop_player() {
+    if [ "$playerpid" -ne "-1" ] 
+    then
+        kill -9 $playerpid
+        playerpid=-1
+        allnotesoff.sh
+    fi
+}
+
+while read r
+do
+    command=($r)
+    case "${command[0]}" in
+        play)
+	    stop_player
+            start_player ${command[1]}
+            playerpid=$!
+            ;;
+        stop)
+	    stop_player
+            ;;
+    esac
+done

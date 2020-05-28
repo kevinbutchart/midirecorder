@@ -1,0 +1,9 @@
+[Unit]
+Description=Midi Recorder systemd service.
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/local/bin/recordmidi.sh
+
+[Install]
+WantedBy=multi-user.target
