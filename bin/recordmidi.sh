@@ -1,12 +1,33 @@
 #!/bin/bash
 
 RECORDINGDIRECTORY=/var/www/html/midi/
+CMD=arecsplitmidi
+
+getport() {
+    $CMD -l | tail -n +2 | grep -v "Midi Through" | head -n 1 | awk '{print $1}'
+}
+
+waitport() {
+    PORT=""
+    while [ -z "$PORT" ]
+    do
+        PORT=$(getport)
+        if [ -z $PORT ]
+        then
+            echo "waiting"
+            sleep 1
+        fi
+    done
+    echo $PORT
+}
 
 # first setup a few things
 disablemmcled
 
 while true
 do
+	PORT=$(waitport)
+
 	DATE=$(date +%F)
 	DIR="$RECORDINGDIRECTORY"/"$DATE"
 	if [ ! -d "$DIR" ]
@@ -18,6 +39,6 @@ do
 	   index=$(echo $FILES | xargs basename -a | while read r;do echo ${r%_*};done | sort -r -n | head -n 1)
         }
 	((index=index + 1))
-	arecsplitmidi -p 20:0 "$DIR"/"$index"_"$DATE".mid
+	$CMD -p $PORT "$DIR"/"$index"_"$DATE".mid
 done
 
