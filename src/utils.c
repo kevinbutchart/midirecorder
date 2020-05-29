@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include "utils.h"
 
 static bool keyState[256];
 static int keyDownCount = 0;
@@ -21,6 +22,15 @@ void addKeyUp(int key){
             keyDownCount = 0;
     }
 }
+
+void addController(int cont, int value)
+{
+    if (!hasStarted) {
+        if (cont == 67 && value == 0) {
+            playlast();
+        }
+    }
+}
   
 bool areKeysDown() {
     return keyDownCount>0;
@@ -36,4 +46,8 @@ void ledon(bool on) {
     char buf[10];
     sprintf(buf, "ledon %d", on);
     system(buf);
+}
+
+void playlast() {
+    system("playlast.sh");
 }
