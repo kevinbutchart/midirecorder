@@ -407,9 +407,7 @@ static void delta_time(struct smf_track *track, const snd_seq_event_t *ev)
 	int diff = ev->time.tick - track->last_tick;
 	if (diff < 0)
 		diff = 0;
-	static bool first = true;
-        if (first) {
-	   first = false;
+        if (!hasStarted) {
  	   diff = 0;
         }
 	var_value(track, diff);
@@ -470,6 +468,7 @@ static void record_event(const snd_seq_event_t *ev)
 	switch (ev->type) {
 	case SND_SEQ_EVENT_NOTEON:
 		delta_time(track, ev);
+		hasStarted = true; // set after first delta_time calculation
 		command(track, MIDI_CMD_NOTE_ON | (ev->data.note.channel & 0xf));
 		add_byte(track, ev->data.note.note & 0x7f);
 		add_byte(track, ev->data.note.velocity & 0x7f);
@@ -877,7 +876,6 @@ int main(int argc, char *argv[])
 		    if (kd == 1) {
 			ledon(true);
 			clock_gettime(CLOCK_MONOTONIC_RAW, &begin);
-			hasStarted = true;
                     } else {
 			clock_gettime(CLOCK_MONOTONIC_RAW, &end);
                     }
