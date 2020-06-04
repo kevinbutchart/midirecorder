@@ -20,5 +20,5 @@ do
 	sudo systemctl enable "$f"
 	sudo systemctl start "$f"
 done
-
+sudo mkdir -p /var/www/html/
 sudo cp -R "$DIR"/website/* /var/www/html/

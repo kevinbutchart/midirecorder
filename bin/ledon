@@ -1,2 +1,8 @@
 #!/bin/bash
-sudo sh -c "echo $1 > /sys/class/leds/led0/brightness"
+flag=$1
+model=$(tr -d '\0' </proc/device-tree/model)
+if [[ "$model" == *"Zero"* ]]
+then
+    flag=$((1 - $flag))
+fi 
+sudo sh -c "echo $flag > /sys/class/leds/led0/brightness"
