@@ -446,6 +446,7 @@ static void record_event(const snd_seq_event_t *ev)
     unsigned int i;
     struct smf_track *track;
 
+    printf("in\n");
     /* ignore events without proper timestamps */
     if (ev->queue != queue || !snd_seq_ev_is_tick(ev)){
         return;
@@ -466,6 +467,7 @@ static void record_event(const snd_seq_event_t *ev)
     if (i >= num_tracks)
         return;
     track = &tracks[i];
+    printf("event: %d\n",ev->type);
 
     switch (ev->type) {
         case SND_SEQ_EVENT_NOTEON:
@@ -499,6 +501,7 @@ static void record_event(const snd_seq_event_t *ev)
         case SND_SEQ_EVENT_PGMCHANGE:
             delta_time(track, ev);
             command(track, MIDI_CMD_PGM_CHANGE | (ev->data.control.channel & 0xf));
+            printf("program change: %d\n", ev->data.control.value & 0x7f);
             add_byte(track, ev->data.control.value & 0x7f);
             break;
         case SND_SEQ_EVENT_CHANPRESS:

@@ -1,2 +1,14 @@
 #!/bin/bash
 describedir $(todaydir)
+describedir $(yesterdaydir)
+
+inotifywait -m -e create $(todaydir) |
+while read dirname eventlist eventfile
+do
+   [[ "$eventfile" =~ .*mid$ ]] && {
+       createjson "$dirname"
+       DATE=$(basename "$dirname")
+       JSONFILE=$(basename "$eventfile" .mid).json
+       echo "{\"date\":\"$DATE\",\"recordings\":["$(cat "$dirname"/"$JSONFILE")"]}"
+   }
+done

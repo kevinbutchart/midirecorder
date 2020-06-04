@@ -6,6 +6,7 @@
 
 static bool keyState[256];
 static int keyDownCount = 0;
+static bool isPlaying = false;
 
 void addKeyDown(int key) {
     if (!keyState[key]) {
@@ -25,9 +26,16 @@ void addKeyUp(int key){
 
 void addController(int cont, int value)
 {
+    printf("controller: %d value: %d\n", cont, value);
     if (!hasStarted) {
         if (cont == 67 && value == 0) {
-            playlast();
+            if (!isPlaying) {
+                playlast();
+                isPlaying = true;
+            } else {
+                stopPlayback();
+                isPlaying = false;
+            }
         }
     }
 }
@@ -49,5 +57,8 @@ void ledon(bool on) {
 }
 
 void playlast() {
-    system("playlast.sh");
+    system("playlast.sh&");
+}
+void stopPlayback() {
+    system("stopplayback.sh");
 }

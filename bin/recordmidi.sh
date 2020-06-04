@@ -27,7 +27,7 @@ disablemmcled
 while true
 do
 	PORT=$(waitport)
-
+        echo "PORT: $PORT"
 	DATE=$(date +%F)
 	DIR="$RECORDINGDIRECTORY"/"$DATE"
 	if [ ! -d "$DIR" ]

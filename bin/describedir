@@ -1,12 +1,13 @@
 #!/bin/bash
 DIR="$1"
+DIRNAME=$(basename "$1")
 createjson "$DIR"
 FILES=$(ls $1/*.json)
-FILES=$(basename -a $FILES | sort -n -r )
-str="["
+FILES=$(basename -a $FILES | sort -n)
+str="{\"date\":\"$DIRNAME\",\"recordings\":["
 for f in $FILES
 do
    str+="$(cat $DIR/$f),"
 done
-str=${str%?}"]"
+str=${str%?}"]}"
 echo $str

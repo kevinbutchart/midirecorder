@@ -9,5 +9,6 @@ bool areKeysDown();
 double timediff(struct timespec * begin, struct timespec * end);
 void ledon(bool on);
 void playlast();
+void stopPlayback();
 
 bool hasStarted;
