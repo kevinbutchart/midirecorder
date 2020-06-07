@@ -1,14 +1,15 @@
 #!/bin/bash
-describedir $(todaydir)
-describedir $(yesterdaydir)
+dirs=$(listdirs | head -n 5) 
+for d in $dirs
+do
+    describedir "$d"
+done
 
-inotifywait -m -e create $(todaydir) |
+inotifywait -r -m -e create /var/www/html/midi |
 while read dirname eventlist eventfile
 do
-   [[ "$eventfile" =~ .*mid$ ]] && {
-       createjson "$dirname"
+   [[ "$eventfile" =~ .*json$ ]] && {
        DATE=$(basename "$dirname")
-       JSONFILE=$(basename "$eventfile" .mid).json
-       echo "{\"date\":\"$DATE\",\"recordings\":["$(cat "$dirname"/"$JSONFILE")"]}"
+       echo "{\"date\":\"$DATE\",\"recordings\":["$(cat "$dirname"/"$eventfile")"]}"
    }
 done

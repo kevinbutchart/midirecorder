@@ -24,21 +24,22 @@ waitport() {
 # first setup a few things
 disablemmcled
 
+TMP=/tmp/MidiRecorder/
+mkdir -p "$TMP"
+
 while true
 do
 	PORT=$(waitport)
-        echo "PORT: $PORT"
+	$CMD -p $PORT "$TMP"/rec.mid
+
 	DATE=$(date +%F)
 	DIR="$RECORDINGDIRECTORY"/"$DATE"
 	if [ ! -d "$DIR" ]
 	then
 		mkdir -p "$DIR"
 	fi
-	index=0
-	FILES=$(ls "$DIR"/*.mid) && {
-	   index=$(echo $FILES | xargs basename -a | while read r;do echo ${r%_*};done | sort -r -n | head -n 1)
-        }
-	((index=index + 1))
-	$CMD -p $PORT "$DIR"/"$index"_"$DATE".mid
+        FNAME="$DIR"/$(date +%Y_%m%d_%H%M%S)".mid"
+        mv "$TMP"/rec.mid "$FNAME"
+        createjson "$FNAME"
 done
 
