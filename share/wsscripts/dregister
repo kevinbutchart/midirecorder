@@ -1,0 +1,20 @@
+#!/bin/bash
+# pull in defines for DROPBOX_APP AND DROPBOX_APP_SECRET
+source /root/.dropbox_config
+
+while read r
+do
+  AUTHRESULT=$(curl https://api.dropbox.com/oauth2/token \
+    -d code="$r" \
+    -d grant_type=authorization_code \
+    -u $DROPBOX_APP:$DROPBOX_APP_SECRET)
+
+  AUTHCODE=$(echo "$AUTHRESULT" | jq .access_token)
+  if [[ "$AUTHCODE" != "null" ]]
+  then
+     echo "OAUTH_ACCESS_TOKEN="$AUTHCODE > ~/.dropbox_uploader
+     echo "success"
+  else
+     echo "failure"
+  fi
+done
