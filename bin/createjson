@@ -1,7 +1,22 @@
 #!/bin/bash
 fname="$1"
 infoname=${fname%.mid}.json
-
+modtime=$(stat -c '%.19y' "$fname")
+timearr=($modtime)
+filedate=${timearr[0]}
+filetime=${timearr[1]}
 duration=$(duration "$fname")
 name=$(basename "$fname") 
-echo "{ \"fullname\" : \"$fname\", \"name\" : \"$name\", \"duration\" : \"$duration\" }" > $infoname
+JSON=$(cat <<-END
+{ 
+"fullname" : "$fname",
+"title" : "Untitled",
+"name" : "$name",
+"date" : "$filedate",
+"time" : "$filetime",
+"favourite" : false,
+"duration" : "$duration" 
+}
+END
+)
+echo $JSON > "$infoname"

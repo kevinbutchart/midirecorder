@@ -4,8 +4,17 @@
 #include <time.h>
 #include "utils.h"
 
+#define DAMPER_PEDAL 64
+#define SOSTENATU_PEDAL 66
+#define SOFT_PEDAL 67
+
+#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+
 static bool keyState[256];
+static int pedalControllers[3] = { DAMPER_PEDAL, SOSTENATU_PEDAL, SOFT_PEDAL };
+static bool pedalState[3] = { false, false, false};
 static int keyDownCount = 0;
+static int pedalDownCount = 0;
 static bool isPlaying = false;
 
 void addKeyDown(int key) {
@@ -24,11 +33,35 @@ void addKeyUp(int key){
     }
 }
 
+int getControllerIndex(int controllerNumber) {
+
+    for (int i = 0; i < NELEMS(pedalControllers); ++i) {
+        if (pedalControllers[i] == controllerNumber) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void setPedalState(int controller, int value) {
+    int cindex = getControllerIndex(controller);
+    if (cindex != -1) {
+        bool pedalDown = value != 0;
+
+        if (pedalDown != pedalState[cindex]) {
+            pedalDown? pedalDownCount++ : pedalDownCount--;
+            if (pedalDownCount < 0) pedalDownCount=0; // this would be bug!
+            pedalState[cindex] = pedalDown;
+        }
+    }
+}
+
+
 void addController(int cont, int value)
 {
     printf("controller: %d value: %d\n", cont, value);
     if (!hasStarted) {
-        if (cont == 67 && value == 0) {
+        if (cont == SOSTENATU_PEDAL && value == 0) {
             if (!isPlaying) {
                 playlast();
                 isPlaying = true;
@@ -38,10 +71,15 @@ void addController(int cont, int value)
             }
         }
     }
+    setPedalState(cont, value);
 }
   
 bool areKeysDown() {
     return keyDownCount>0;
+}
+
+bool areKeysOrPedalsDown() {
+    return keyDownCount>0 || pedalDownCount>0;
 }
 
 double timediff(struct timespec* begin, struct timespec* end) {

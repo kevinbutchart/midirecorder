@@ -5,6 +5,7 @@ void addKeyDown(int key);
 void addKeyUp(int key);
 void addController(int cont, int value);
 bool areKeysDown();
+bool areKeysOrPedalsDown();
 
 double timediff(struct timespec * begin, struct timespec * end);
 void ledon(bool on);

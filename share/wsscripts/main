@@ -10,6 +10,8 @@ while read dirname eventlist eventfile
 do
    [[ "$eventfile" =~ .*json$ ]] && {
        DATE=$(basename "$dirname")
-       echo "{\"date\":\"$DATE\",\"recordings\":["$(cat "$dirname"/"$eventfile")"]}"
+       FNAME="$dirname/$eventfile"
+       OUT=$(cat "$FNAME")
+       echo "{\"date\":\"$DATE\",\"recordings\":["$OUT"]}"
    }
 done

@@ -886,7 +886,8 @@ int main(int argc, char *argv[])
             }
             keysDown = kd;
         } 
-        if (kd == 0 && hasStarted) {
+        bool kopd = areKeysOrPedalsDown();	
+        if (kopd == 0 && hasStarted) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &current);
             double time_since = timediff(&end, &current);
             printf("time since last note: %f\n", time_since);

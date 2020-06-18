@@ -31,15 +31,26 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     cursor: pointer;
 }
 
+.btnfav {
+    border: none;
+    background-color: transparent;
+}
+
+.fav {
+    font-size: 24px;
+        color: DarkOrange;
+}
+
 .btn:hover {
     background-color: DarkSeaGreen;
 }
 
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/all.css">
 
 <script>
 var dateMap = new Map()
+var entryMap = new Map()
 var playsocket = new WebSocket('ws://' + location.host + '/play')
 var mainsocket = new WebSocket('ws://' + location.host + '/main')
 
@@ -53,22 +64,38 @@ mainsocket.onmessage = function(event) {
    } else {
         headerrow = today.insertRow()
         cell1 = headerrow.insertCell()
-        cell1.colSpan = 4
+        cell1.colSpan =10 
         cell1.innerHTML="<div class='dateheader'>Date:"+data.date + "</div>"
         dateMap.set(data.date, headerrow)
    }
    var arr = data.recordings
    for (var i=0; i < arr.length; i++) {
 	var rec = arr[i];  
-	var r = today.insertRow(headerrow.rowIndex + 1)
+        var r = null
+        if (entryMap.has(rec.fullname) ) {
+            r = entryMap.get(rec.fullname)
+        } else {
+	    r = today.insertRow(headerrow.rowIndex + 1)
+        }
 	cell1 = r.insertCell();
 	cell2 = r.insertCell();
 	cell3 = r.insertCell();
 	cell4 = r.insertCell();
+	cell5 = r.insertCell();
+	cell6 = r.insertCell();
+	cell7 = r.insertCell();
+	cell8 = r.insertCell();
 	cell1.innerHTML=rec.name
 	cell2.innerHTML=rec.duration
-	cell3.innerHTML="<button class=btn onclick=\"play('" + rec.fullname + "')\"><i class=\"fa fa-play\"></i></button>"
-	cell4.innerHTML="<button class=btn onclick=\"stop()\"><i class=\"fa fa-stop\"></i></button>"
+	cell3.innerHTML=rec.title
+	cell4.innerHTML=rec.date
+	cell5.innerHTML=rec.time
+        var favstyle="<i class=\"far fa-star fav\"></i>"
+        if (rec.favourite == true)
+            favstyle="<i class=\"fas fa-star fav\"></i>"
+	cell6.innerHTML="<button class=btnfav onclick=\"setfav('" + rec.fullname + "'," + !rec.favourite + ")\">"+ favstyle+"</button>"
+	cell7.innerHTML="<button class=btn onclick=\"play('" + rec.fullname + "')\"><i class=\"fas fa-play\"></i></button>"
+	cell8.innerHTML="<button class=btn onclick=\"stop()\"><i class=\"fas fa-stop\"></i></button>"
    }
 }
 
@@ -80,6 +107,10 @@ function play(file)
 function stop()
 {    
 	playsocket.send("stop")
+}
+
+function setfav(record, value) {
+
 }
 </script>
 
