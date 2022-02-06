@@ -115,8 +115,8 @@ class RecordMidi():
                                 self.damper_val = msg.value
 
                 time.sleep(0.1)
-                # safety catch - if radio silence for more than 20 seconds, restart listening
-                if time.time() - self.last_time > 20 and (self.player == None or not self.player.is_alive()):
+                # safety catch - if radio silence for more than 3600 seconds, restart listening
+                if time.time() - self.last_time > 3600 and (self.player == None or not self.player.is_alive()):
                     self.should_exit = True 
                 if self.should_exit:
                     return None

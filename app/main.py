@@ -33,12 +33,9 @@ j2_env = Environment(loader=FileSystemLoader(template_dir), trim_blocks=True)
 db = MidiRecordingsDB('sqlite:///./recordings.db')
 midirecorder = MidiRecorder(db)
 
-msg_queue = asyncio.Queue()
-
 @app.on_event('startup')
 async def app_startup():
     print("starting")
-    FileWatcher(msg_queue)
 
 @app.on_event('shutdown')
 async def app_shutdown():
@@ -142,6 +139,9 @@ async def producer_handler(websocket):
 async def websocket_main(websocket: WebSocket):
     await manager.connect(websocket)
     try:
+        global msg_queue
+        msg_queue = asyncio.Queue()
+        FileWatcher(msg_queue)
         consumer_task = asyncio.ensure_future(
             consumer_handler(websocket))
         producer_task = asyncio.ensure_future(
