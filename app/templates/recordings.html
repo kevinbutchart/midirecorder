@@ -1,0 +1,35 @@
+<div class='dateheader'> {{dirname}} </div>
+<table>
+<thead>
+<th> Name </th>
+<th> Duration </th>
+<th> Title </th>
+<th> Date </th>
+<th> Time </th>
+<th> Favourite </th>
+<th> Play </th>
+<th> Stop </th>
+
+</thead>
+{% for rec in recordings %}
+<tr>
+    <td> {{rec.name}} </td>
+    <td> {{rec.duration}} </td>
+    <td> {{rec.title}} </td>
+    <td> {{rec.date}} </td>
+    <td> {{rec.time}} </td>
+     {% set fullname = directory + '/' + rec.name %}
+     {% if rec.favourite %}
+     {% set favstyle='<i class="fas fa-star fav" /i>' %}
+     {% set favourite = 'true' %}
+     {% else %}
+     {% set favstyle='<i class="far fa-star fav" /i>' %}
+     {% set favourite = 'false' %}
+     {% endif %}
+
+     <td><button id="fav-{{rec.name}}" data-fav="{{favourite}}" class=btnfav onclick="setfav('{{fullname}}', this.id)"> {{favstyle}}</button></td>
+     <td><button class=btn onclick="play('{{fullname}}')"><i class="fas fa-play" /></button></td>
+     <td><button class=btn onclick="stop()"><i class="fas fa-stop" /i></button></td>
+</tr>
+{% endfor %}
+</table>

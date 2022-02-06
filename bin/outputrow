@@ -1,9 +1,0 @@
-#!/bin/bash
-filename=$1
-infofilename=${filename%.mid}.info
-fn=$(jq -r .name "$infofilename")
-duration=$(jq -r .duration "$infofilename")
-echo "<tr>"
-echo "<td>"$fn"</td>"
-echo "<td>"$duration"</td>"
-echo "</tr>"

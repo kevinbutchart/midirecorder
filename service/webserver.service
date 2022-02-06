@@ -1,9 +1,0 @@
-[Unit]
-Description=Websocket server systemd service.
-
-[Service]
-Type=simple
-ExecStart=/bin/bash /usr/local/bin/startwebserver.sh
-
-[Install]
-WantedBy=multi-user.target

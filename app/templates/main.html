@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', path='/css/all.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='/css/main.css?ver=v7') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='/css/table.css?ver=v3') }}">
+
+<script src="{{ url_for('static', path='/js/main.js') }}" ></script>
+    
+</head>
+<body>
+    {% set home_page=True %}
+    {% include 'navbar.html' %}
+
+    <h2> Recordings </h2>
+    <p>
+    <button class="btnfav" onclick="togglefavourites()"> <i class="far fa-star fav"></i> </button>
+    </p>
+    <p>
+    </p>
+
+    <datalist id="titlelist">
+        {% for title in titles %}
+        <option>{{title}}</option>
+        {% endfor %}
+    </datalist>
+        
+
+    <div id="recordings">
+        <div id="saved_recordings">
+            {% for date in recordings %}
+            <div class='dateheader'> {{date}} </div>
+            <table class='recordingsTable'>
+            <thead>
+            <th> Name </th>
+            <th> Duration </th>
+            <th> Title </th>
+            <th> Time </th>
+            <th> Favourite </th>
+            <th> Play </th>
+            <th> Stop </th>
+            <th> Synth </th>
+
+            </thead>
+            {% for rec in recordings[date] %}
+            <tr>
+                <td> {{rec.name}} </td>
+                <td> {{ rec.duration | round}} </td>
+                <td> <input type="text" id="title-{{rec.id}}" name="title" list="titlelist" value="{{rec.title}}" onchange="prInstance.set_title('{{rec.id}}', this.id)" /> </td>
+                <td> {{rec.datetime.time().strftime("%H:%M:%S")}} </td>
+                 {% if rec.favourite %}
+                 {% set favstyle='fas fa-star fav' %}
+                 {% set favourite = 'true' %}
+                 {% else %}
+                 {% set favstyle='far fa-star fav' %}
+                 {% set favourite = 'false' %}
+                 {% endif %}
+
+                 <td><button id="fav-{{rec.name}}" data-fav="{{favourite}}" class=btnfav onclick="prInstance.setfav('{{rec.id}}', this.id)"> <i class="{{favstyle}}" /></button></td>
+                 <td><button class=btn onclick="prInstance.play('{{rec.id}}')"><i class="fas fa-play" /></button></td>
+                 <td><button class=btn onclick="prInstance.stop()"><i class="fas fa-stop" /i></button></td>
+                 <td><button class=btn onclick="prInstance.synth('{{rec.id}}')"><i class="fas fa-arrow-down" /></button></td>
+            </tr>
+            {% endfor %}
+            </table>
+        {% endfor %}
+        </div>    
+    </div>
+</body>
+</html>

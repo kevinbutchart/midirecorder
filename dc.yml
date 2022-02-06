@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  pianorecorder:
+    restart: always
+    build: app 
+    privileged: true
+    ports:
+      - 80:8000
+    volumes:
+      -  ./recordings.db:/app/recordings.db
+    command: /app/gunicorn_start.sh
+  midirecorder:
+    restart: always
+    build: app 
+    privileged: true
+    volumes:
+      -  ./recordings.db:/app/recordings.db
+    command: /app/recorder_start.sh

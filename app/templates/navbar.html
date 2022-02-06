@@ -1,0 +1,12 @@
+<nav class="topnav">
+    <strong><a {{ home_page and 'class=active' }} href="/">Home</a></strong>
+    <a href="/search">Search</a>
+    <a href="{{ url_for('static', path='shared.html')}}">Shared</a>
+    <a href="#contact">Contact</a>
+    <div class="search-container">
+        <form method="GET" action="/search">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+</nav>

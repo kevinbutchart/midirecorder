@@ -1,5 +1,7 @@
+
 [Unit]
-Description=midi recorder
+Description=gunicorn daemon
+Requires=gunicorn.socket
 After=network.target
 
 [Service]
@@ -7,9 +9,9 @@ Type=simple
 # the specific user that our service will run as
 User=pi
 Group=pi
-RuntimeDirectory=midirecorder
+RuntimeDirectory=pianorecorder
 WorkingDirectory=/home/pi/pianorecorder
-ExecStart=/home/pi/pianorecorder/recorder_start.sh
+ExecStart=/home/pi/pianorecorder/gunicorn_start.sh
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5

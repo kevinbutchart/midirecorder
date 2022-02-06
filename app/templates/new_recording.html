@@ -1,0 +1,18 @@
+<tr>
+    <td> {{name}} </td>
+    <td> {{duration | round}} </td>
+    <td> {{title}} </td>
+    <td> {{date}} </td>
+    <td> {{time}} </td>
+     {% if favourite %}
+     {% set favstyle='fas fa-star fav' %}
+     {% set favourite = 'true' %}
+     {% else %}
+     {% set favstyle='far fa-star fav' %}
+     {% set favourite = 'false' %}
+     {% endif %}
+
+     <td><button id="fav-{{name}}" data-fav="{{favourite}}" class=btnfav onclick="setfav('{{id}}', this.id)"> <i class="{{favstyle}}" /></button></td>
+     <td><button class=btn onclick="play('{{id}}')"><i class="fas fa-play" /></button></td>
+     <td><button class=btn onclick="stop()"><i class="fas fa-stop" /i></button></td>
+</tr>

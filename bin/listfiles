@@ -1,2 +1,0 @@
-#!/bin/bash
-find $1 -type f -name "*.mid" -printf "%T@ %p\n" | sort -n -r | awk '{print $2}'

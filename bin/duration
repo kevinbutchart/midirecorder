@@ -1,5 +1,0 @@
-#!/bin/bash
-calc(){ awk "BEGIN { printf(\"%0.2f\",$1) }"; }
-TIME_TICKS=$(durations $1 | tail -n 1 | awk {'print $1'})
-# arecordmidi defaults to 384 ticks a frame and 120 beats per minute
-calc $TIME_TICKS/768.0

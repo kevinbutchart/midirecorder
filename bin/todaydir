@@ -1,2 +1,0 @@
-#!/bin/bash
-listdirs | head -n 1
