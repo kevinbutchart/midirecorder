@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  pianorecorder:
+    restart: always
+    image: kevinbutchart/pianorecorder:latest 
+    privileged: true
+    ports:
+      - 80:8000
+    volumes:
+      -  ./app:/app
+    command: /app/gunicorn_start.sh
+  midirecorder:
+    restart: always
+    image: kevinbutchart/pianorecorder:latest 
+    privileged: true
+    volumes:
+      -  ./app:/app
+    command: /app/recorder_start.sh
