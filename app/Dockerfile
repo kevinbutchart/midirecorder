@@ -1,9 +1,18 @@
-FROM python:3.7-slim-buster
-
-WORKDIR /app
-
+FROM python:3.7-slim-buster as compile-image
+ENV PATH=/root/.local/bin:$PATH
+WORKDIR /root
 COPY requirements.txt requirements.txt
-RUN apt-get update && apt-get install –no-install-recommends -yy build-essential libasound2-dev librtmidi-dev && \
-    python3 -m pip install --upgrade pip &&\
-    python3 -m pip install -r requirements.txt
+RUN apt-get update && apt-get install -yy --no-install-recommends build-essential librtmidi-dev && \
+    rm -rf /var/lib/apt/lists/* &&\ 
+    python3 -m pip install --user --upgrade pip &&\
+    python3 -m pip install --user -r requirements.txt
+
+FROM python:3.7-slim-buster as runtime-image
+COPY --from=compile-image /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+RUN apt-get update && apt-get install -yy --no-install-recommends libasound2 librtmidi4
+
+FROM runtime-image
+WORKDIR /app
 COPY . .
+ENV PATH=/root/.local/bin:$PATH
