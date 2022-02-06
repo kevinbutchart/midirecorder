@@ -94,7 +94,7 @@ class RecordMidi():
                 while not self.message_queue.empty():
                     msg = self.message_queue.get()
                     if not self.is_recording:
-                        if msg.type == 'note_on':
+                        if msg.type == 'note_on' and msg.note != 108:
                             self.is_recording = True
                             self.start_time = time.time()
                             # override delta time on first note as we always want the recording to start immediately
@@ -103,7 +103,7 @@ class RecordMidi():
                                 self.__add_msg(Message('control_change', control=64, value=self.damper_val, time=0))
                             break
                         else:
-                            if msg.is_cc(66) and msg.value == 0:
+                            if (msg.is_cc(66) and msg.value == 0) or (msg.type == 'note_off' and msg.note == 108):
                                 if last_recording is not None:
                                     if self.player is None or not self.player.is_alive():
                                         self.player = MidiPlayer(bytes=last_recording)
