@@ -3,6 +3,7 @@ services:
   pianorecorder:
     restart: always
     image: kevinbutchart/pianorecorder:latest
+    build: app
     privileged: true
     ports:
       - 80:8000
@@ -12,6 +13,7 @@ services:
   midirecorder:
     restart: always
     image: kevinbutchart/pianorecorder:latest
+    build: app
     privileged: true
     volumes:
       -  ./recordings.db:/app/recordings.db
