@@ -4,6 +4,13 @@ import mido
 from mido import MidiFile, Message, tempo2bpm, MidiTrack,MetaMessage
 from ordered_set import OrderedSet
 from io import BytesIO
+import os
+
+def led_on():
+    os.system('ledon 1')
+
+def led_off():
+    os.system('ledon 0')
 
 class MidiPlayer(threading.Thread):
     def __init__(self, file=None, bytes=None):
@@ -23,6 +30,7 @@ class MidiPlayer(threading.Thread):
         output_time_last = 0
         delay_debt = 0
         t0 = None
+        led_on()
         with mido.open_output(port, autoreset=True) as outport:
             mid = mido.MidiFile(file=self.file)
             for message in mid:
@@ -43,6 +51,7 @@ class MidiPlayer(threading.Thread):
 
                 if not message.is_meta:
                     outport.send(message)
+            led_off()
 
     def list_output_ports(self):
         ports = OrderedSet() 

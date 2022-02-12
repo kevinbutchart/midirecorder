@@ -15,4 +15,4 @@ RUN apt-get update && apt-get install -yy --no-install-recommends libasound2 lib
 FROM runtime-image
 WORKDIR /app
 COPY . .
-ENV PATH=/root/.local/bin:$PATH
+ENV PATH=/root/.local/bin:/app/bin:$PATH

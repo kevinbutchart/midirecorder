@@ -5,4 +5,4 @@ if [[ "$model" == *"Zero"* ]]
 then
     flag=$((1 - $flag))
 fi 
-sudo sh -c "echo $flag > /sys/class/leds/led0/brightness"
+echo $flag > /sys/class/leds/led0/brightness

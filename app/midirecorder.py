@@ -36,12 +36,16 @@ def writeToLog(msg):
     logfile.write(str(msg) + "\n")
     logfile.close()
 
+def led_on():
+    os.system('ledon 1')
+
+def led_off():
+    os.system('ledon 0')
+
 
 def handle_pdb(sig, frame):
     import pdb
     pdb.Pdb().set_trace(frame)
-
-
 
 global last_recording
 last_recording = None
@@ -122,9 +126,12 @@ class RecordMidi():
                     return None
 
             if self.player != None:
+                led_off()
                 self.player.stop()
                 self.player = None
+                return None
             writeToLog("start record loop")
+            led_on()
             while self.is_recording and not self.should_exit:
                 while not self.message_queue.empty():
                     msg = self.message_queue.get()
@@ -137,6 +144,7 @@ class RecordMidi():
                     self.is_recording = False 
                 time.sleep(.1)
             writeToLog("exit record loop")
+            led_off()
 
             if self.should_exit:
                 return None
