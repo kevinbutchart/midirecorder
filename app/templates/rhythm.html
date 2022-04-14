@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    {% include 'header.html' %}
+<head>
+<style>
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    {% include 'navbar.html' %}
+
+
+<h1> Metronome </h1>
+
+<div class="slidecontainer">
+  <p>Tempo: <span id="tempo"></span></p>
+  <input type="range" min="10" max="220" value="80" class="slider" id="tempoRange">
+  <p>Beats Per Bar: <span id="beats"></span></p>
+  <input type="range" min="1" max="6" value="4" class="slider" id="beatsRange">
+  <p>Volume: <span id="volume"></span></p>
+  <input type="range" min="1" max="127" value="60" class="slider" id="volumeRange">
+</div>
+
+<a href="#" class="btn btn-lg" style="background:lightgray" onclick="start_metronome()"><i class="bi bi-play-circle-fill" style="color:cornflowerblue"></i>Start</a>
+<a href="#" class="btn btn-lg" style="background:lightgray" onclick="stop_metronome()"><i class="bi bi-stop-circle-fill"></i>Stop</a>
+<script>
+
+function connectSlider(rangeElem, displayElem) {
+    var slider = document.getElementById(rangeElem);
+    var display = document.getElementById(displayElem);
+    display.innerHTML = slider.value;
+
+    slider.oninput = function() {
+        display.innerHTML = this.value;
+    }
+
+}
+
+function start_metronome() {
+    var bpm = document.getElementById("tempoRange").value;
+    var beats = document.getElementById("beatsRange").value;
+    var volume = document.getElementById("volumeRange").value;
+    prInstance.start_metronome(bpm, beats, volume)
+}
+
+function stop_metronome() {
+    prInstance.stop_metronome()
+}
+
+connectSlider("tempoRange", "tempo");
+connectSlider("beatsRange", "beats");
+connectSlider("volumeRange", "volume");
+
+</script>
+
+</div>
+<script>
+    $( document ).ready(function() {
+        document.getElementById("nav_rhythm").classList.add('active');
+        console.log( "ready!" );
+    });
+
+</script>
+</body>
+</html>

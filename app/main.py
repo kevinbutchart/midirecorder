@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 import subprocess
 from midirecordingsdb import MidiRecordingsDB, RecordingList
 from midiplayer import MidiPlayer
+from metronome import Metronome
 from connectionmanager import ConnectionManager
 from pathlib import Path
 import asyncio
@@ -46,23 +47,19 @@ async def read_item(request: Request):
     titles = db.get_titles()
     return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs, "titles" : titles})
 
+@app.get("/rhythm", response_class=HTMLResponse)
+async def get_rhythm(request: Request):
+    return templates.TemplateResponse("rhythm.html", {"request" : request})
+
 
 def midi_to_audio(infile, outfile):
     subprocess.call(['fluidsynth', '-ni', './Yamaha.sf2', infile, '-F', outfile, '-r', '44100', '-g', '0.5'])
 
 
-@app.get("/synth/{id}", response_class=HTMLResponse)
-async def getsynth(request: Request, background_tasks: BackgroundTasks, id):
+@app.get("/recording/{id}", response_class=HTMLResponse)
+async def get_recording(request: Request, background_tasks: BackgroundTasks, id):
     rec = db.get_recording(id)
-    Path("downloads").mkdir(parents=True, exist_ok=True)
-
-    midifile = 'downloads/' + str(id) + '.mid'
-    with open(midifile, 'wb') as f:
-        f.write(rec.data.data)
-    oggfile='downloads/' + str(id) + '.oga'
-    if not Path(oggfile).exists():
-        background_tasks.add_task(midi_to_audio, midifile, oggfile)
-    return templates.TemplateResponse("synth.html", {"request" : request, "midifile" : midifile, "oggfile" : oggfile})
+    return templates.TemplateResponse("recording.html", {"request" : request, "rec" : rec})
 
 
 @app.get("/search", response_class=HTMLResponse)
@@ -76,9 +73,12 @@ manager = ConnectionManager()
 class CommandRunner():
     def __init__(self):
         self.midiplayer = None
+        self.metronome = None
 
         self.commands = { "play" : self.play,
                     "stop" : self.stop,
+                    "start_metronome" : self.start_metronome,
+                    "stop_metronome" : self.stop_metronome,
                     "set_title" : self.set_title,
                     "set_favourite" : self.set_favourite
                     }
@@ -89,6 +89,7 @@ class CommandRunner():
             cmd(message)
 
     def play(self, message):
+        print(message, flush=True)
         id = message['id']
         rec = db.get_recording(id)
         if self.midiplayer != None:
@@ -99,6 +100,21 @@ class CommandRunner():
     def stop(self, message):
         self.midiplayer.stop()
         self.midiplayer = None
+
+    def start_metronome(self, message):
+        print(message, flush=True)
+        bpm = message['bpm']
+        beats = message['beats']
+        volume = message['volume']
+
+        if self.metronome != None:
+            self.metronome.stop()
+        self.metronome = Metronome(bpm, beats, volume)
+        self.metronome.start()
+
+    def stop_metronome(self, message):
+        self.metronome.stop()
+        self.metronome = None
 
     def set_title(self, message):
         id = message['id']

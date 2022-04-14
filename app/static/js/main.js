@@ -53,7 +53,23 @@ var prInstance = (function() {
             }
             mainsocket.send(JSON.stringify(cmd))
         },
-
+        start_metronome : function(bpm, beats, volume)
+        {
+            var cmd = {
+                "command" : "start_metronome",
+                "bpm" : bpm,
+                "beats" : beats,
+                "volume" : volume
+            }
+            mainsocket.send(JSON.stringify(cmd))
+        },
+        stop_metronome : function()
+        {    
+            var cmd = {
+                "command" : "stop_metronome"
+            }
+            mainsocket.send(JSON.stringify(cmd))
+        },
         setfav : function(record, id) {
             var favbutton = document.getElementById(id)
             var newval = !(favbutton.dataset.fav == 'true')

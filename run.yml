@@ -8,6 +8,8 @@ services:
       - 80:8000
     volumes:
       -  ./app:/app
+    environment:
+      - PYTHONUNBUFFERED=1
     command: /app/gunicorn_start.sh
   midirecorder:
     restart: always

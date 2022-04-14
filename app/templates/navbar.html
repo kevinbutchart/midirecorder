@@ -1,12 +1,12 @@
-<nav class="topnav">
-    <strong><a {{ home_page and 'class=active' }} href="/">Home</a></strong>
-    <a href="/search">Search</a>
-    <a href="{{ url_for('static', path='shared.html')}}">Shared</a>
-    <a href="#contact">Contact</a>
-    <div class="search-container">
-        <form method="GET" action="/search">
-            <input type="text" placeholder="Search.." name="search">
-            <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Piano Recorder</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a id="nav_home" class="nav-item nav-link" href="/">Recordings</a>
+      <a id="nav_rhythm" class="nav-item nav-link" href="/rhythm">Rhythm</a>
     </div>
+  </div>
 </nav>

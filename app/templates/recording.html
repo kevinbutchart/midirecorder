@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+{% include 'header.html' %}
+<body>
+<div class="container-fluid">
+    {% include 'navbar.html' %}
+
+<table class="table table-bordered table-striped table-borderless">
+  <tbody>
+            <tr class="table-primary">
+                <td colspan="2">Recording</td> </tr>
+                <tr> <td>Name</td><td> {{rec.name}}</td><tr> 
+                <tr> <td>Time</td><td> {{rec.datetime}}</td><tr> 
+                <tr> <td>Duration</td><td>{{rec.duration | round}}</td>
+ </tbody>
+</table>
+    <a href="#" class="btn btn-lg" style="background:lightgray" onclick="prInstance.play('{{rec.id}}')"><i class="bi bi-play-circle-fill" style="color:cornflowerblue"></i>Play</a>
+    <a href="#" class="btn btn-lg" style="background:lightgray" onclick="prInstance.stop()"><i class="bi bi-stop-circle-fill"></i>Stop</a>
+</div>
+</body>
+</html>
