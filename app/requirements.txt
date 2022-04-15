@@ -12,6 +12,7 @@ mido
 ordered-set
 psutil
 pydantic
+pymongo
 python-rtmidi
 python-multipart
 rtmidi
