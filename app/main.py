@@ -71,9 +71,10 @@ async def get_search_results(request: Request, search: str):
 manager = ConnectionManager()
 
 class CommandRunner():
+    metronome = None
+
     def __init__(self):
         self.midiplayer = None
-        self.metronome = None
 
         self.commands = { "play" : self.play,
                     "stop" : self.stop,
@@ -102,19 +103,20 @@ class CommandRunner():
         self.midiplayer = None
 
     def start_metronome(self, message):
-        print(message, flush=True)
         bpm = message['bpm']
         beats = message['beats']
         volume = message['volume']
 
-        if self.metronome != None:
-            self.metronome.stop()
-        self.metronome = Metronome(bpm, beats, volume)
-        self.metronome.start()
+        if CommandRunner.metronome == None:
+            CommandRunner.metronome = Metronome()
+            CommandRunner.metronome.set(bpm, beats, volume)
+            CommandRunner.metronome.start()
+        else:
+            CommandRunner.metronome.set(bpm, beats, volume)
 
     def stop_metronome(self, message):
-        self.metronome.stop()
-        self.metronome = None
+        CommandRunner.metronome.stop()
+        CommandRunner.metronome = None
 
     def set_title(self, message):
         id = message['id']

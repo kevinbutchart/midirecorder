@@ -8,7 +8,9 @@ services:
     ports:
       - 80:8000
     volumes:
-      -  ./recordings.db:/app/recordings.db
+      -  $HOME/.config/pianorecorder/recordings.db:/app/recordings.db
+    environment:
+      - PYTHONUNBUFFERED=1
     command: /app/gunicorn_start.sh
   midirecorder:
     restart: always
@@ -16,5 +18,5 @@ services:
     build: app
     privileged: true
     volumes:
-      -  ./recordings.db:/app/recordings.db
+      -  $HOME/.config/pianorecorder/recordings.db:/app/recordings.db
     command: /app/recorder_start.sh
