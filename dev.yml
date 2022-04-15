@@ -20,3 +20,15 @@ services:
       -  ./app:/app
       -  $HOME/.config/pianorecorder/recordings.db:/app/recordings.db
     command: /app/recorder_start.sh
+  database:
+    image: andresvidal/rpi3-mongodb3:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
