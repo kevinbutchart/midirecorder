@@ -16,8 +16,8 @@ pymongo
 python-rtmidi
 python-multipart
 rtmidi
-SQLAlchemy
 starlette
+twisted
 typing-extensions
 uvicorn
 uvloop

@@ -19,8 +19,6 @@ import base64
 from filewatcher import FileWatcher
 
 from os.path import dirname, join
-#from midirecorder import MidiRecorder
-from sqlalchemy import event
 
 current_dir = dirname(__file__)
 template_dir = join(current_dir, 'templates')
