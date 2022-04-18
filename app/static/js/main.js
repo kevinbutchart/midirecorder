@@ -9,8 +9,8 @@ var prInstance = (function() {
        //new_row.innerHTML = event.data
         msg = JSON.parse(event.data)
         if (msg.command == 'reload') {
-            location.reload() 
-        }   
+            location.reload()
+        }
     }
     return {
         // not used yet, needs to check if new title is unique
@@ -35,7 +35,7 @@ var prInstance = (function() {
         },
 
         play : function(id)
-        {  
+        {
             var cmd = {
                 "command" : "play",
                 "id" : id
@@ -43,20 +43,27 @@ var prInstance = (function() {
             mainsocket.send(JSON.stringify(cmd))
         },
         synth : function(id)
-        {  
+        {
             location.href = '/synth/' + id;
         },
         stop : function()
-        {    
+        {
             var cmd = {
                 "command" : "stop"
             }
             mainsocket.send(JSON.stringify(cmd))
         },
-        start_metronome : function(bpm, beats, volume)
+        start_metronome : function()
         {
             var cmd = {
                 "command" : "start_metronome",
+            }
+            mainsocket.send(JSON.stringify(cmd))
+        },
+        update_metronome : function(bpm, beats, volume)
+        {
+            var cmd = {
+                "command" : "update_metronome",
                 "bpm" : bpm,
                 "beats" : beats,
                 "volume" : volume
@@ -64,7 +71,7 @@ var prInstance = (function() {
             mainsocket.send(JSON.stringify(cmd))
         },
         stop_metronome : function()
-        {    
+        {
             var cmd = {
                 "command" : "stop_metronome"
             }

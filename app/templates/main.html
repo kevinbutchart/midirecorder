@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-        <script src="{{ url_for('static', path='/js/jquery.min.js') }}" ></script>
-        <script src="{{ url_for('static', path='/js/bootstrap.min.js') }}" ></script>
-        <link rel="stylesheet" href="css/bootstrap-reboot.min.css"></link>
-        <link rel="stylesheet" href="{{ url_for('static', path='/css/bootstrap.min.css') }}" ></script>
-
-        <script src="{{ url_for('static', path='/js/main.js') }}" ></script>
-    
-</head>
+    {% include 'header.html' %}
 <body>
 
 <div class="container-fluid">
@@ -33,7 +21,7 @@
                 <td colspan="3">Date: {{date}}</td>
             <tr>
             {% for rec in recordings[date] %}
-            <tr onclick="window.location='/recording/{{rec.id}}';"> 
+            <tr onclick="window.location='/recording/{{rec._id}}';"> 
                 <td>{{rec.name}}</a></td>
                 <td>{{rec.duration | round}}</td>
                 <td>{{rec.datetime.time().strftime("%H:%M:%S")}}</td>

@@ -61,7 +61,7 @@ class RecordMidi():
         self.last_time = 0
         self.state = {
                 "keys" : set(),
-                "pedals" : set() 
+                "pedals" : set()
         }
         self.damper_val = 0
         self.should_exit = False
@@ -69,7 +69,7 @@ class RecordMidi():
         self.message_queue = queue.Queue()
 
     def list_input_ports(self):
-        ports = OrderedSet() 
+        ports = OrderedSet()
         for port in mido.get_input_names():
             if "Through" not in port and "RPi" not in port and "RtMidi" not in port and "USB-USB" not in port:
                 ports.append(port)
@@ -91,7 +91,7 @@ class RecordMidi():
         writeToLog("wait start")
         global last_recording
         self.is_recording = False
-        inport = None 
+        inport = None
         self.last_time = time.time()
         with mido.open_input(port, callback=self.__receive_messages) as inport:
             while not self.is_recording:
@@ -121,7 +121,7 @@ class RecordMidi():
                 time.sleep(0.1)
                 # safety catch - if radio silence for more than 3600 seconds, restart listening
                 if time.time() - self.last_time > 3600 and (self.player == None or not self.player.is_alive()):
-                    self.should_exit = True 
+                    self.should_exit = True
                 if self.should_exit:
                     return None
 
@@ -138,10 +138,10 @@ class RecordMidi():
                     self.__add_msg(msg)
 
                 if time.time() - self.last_time > 3 and self.__is_inactive():
-                    self.is_recording = False 
+                    self.is_recording = False
                 # safety catch - abort all recording if silent for 30 seconds
                 if time.time() - self.last_time > 30:
-                    self.is_recording = False 
+                    self.is_recording = False
                 time.sleep(.1)
             writeToLog("exit record loop")
             led_off()
@@ -166,7 +166,7 @@ class RecordMidi():
             resp =  { 'bytes' : b.getbuffer(), 'duration' : mid.length}
             writeToLog(resp)
             return resp
-        return None 
+        return None
 
     def __add_msg(self, msg):
         self.recording.append(msg)
@@ -198,7 +198,7 @@ class RecordMidi():
 class MidiRecorder():
     def __init__(self, db):
         super().__init__()
-        self.db = db 
+        self.db = db
         self.rm = None
 
     def run(self):
@@ -221,6 +221,6 @@ if __name__ == "__main__":
     setproctitle.setproctitle('midirecorder')
     signal.signal(signal.SIGUSR1, handle_pdb)
     print(f"Started process: {os.getpid()}")
-    db = MidiRecordingsDB('sqlite:///./recordings.db')
+    db = MidiRecordingsDB()
     midirecorder = MidiRecorder(db)
     midirecorder.run()

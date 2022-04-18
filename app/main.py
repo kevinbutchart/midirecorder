@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from jinja2 import Environment, FileSystemLoader
 import subprocess
-from midirecordingsdb import MidiRecordingsDB, RecordingList
+from midirecordingsdb import MidiRecordingsDB
 from midiplayer import MidiPlayer
 from metronome import Metronome
 from connectionmanager import ConnectionManager
@@ -15,10 +15,11 @@ import uvicorn
 import json
 import tempfile
 import queue
+import base64
 from filewatcher import FileWatcher
 
 from os.path import dirname, join
-from midirecorder import MidiRecorder
+#from midirecorder import MidiRecorder
 from sqlalchemy import event
 
 current_dir = dirname(__file__)
@@ -30,8 +31,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/downloads", StaticFiles(directory="downloads"), name="downloads")
 templates = Jinja2Templates(directory=template_dir)
 j2_env = Environment(loader=FileSystemLoader(template_dir), trim_blocks=True)
-db = MidiRecordingsDB('sqlite:///./recordings.db')
-midirecorder = MidiRecorder(db)
+db = MidiRecordingsDB()
+#midirecorder = MidiRecorder(db)
+metronome = Metronome()
 
 @app.on_event('startup')
 async def app_startup():
@@ -44,12 +46,12 @@ async def app_shutdown():
 @app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     recs = db.get_recordings_by_date(limit=150)
-    titles = db.get_titles()
-    return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs, "titles" : titles})
+    return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs})
 
 @app.get("/rhythm", response_class=HTMLResponse)
 async def get_rhythm(request: Request):
-    return templates.TemplateResponse("rhythm.html", {"request" : request})
+    settings = db.get_metronome_settings()
+    return templates.TemplateResponse("rhythm.html", {"request" : request, "settings" : settings})
 
 
 def midi_to_audio(infile, outfile):
@@ -61,17 +63,9 @@ async def get_recording(request: Request, background_tasks: BackgroundTasks, id)
     rec = db.get_recording(id)
     return templates.TemplateResponse("recording.html", {"request" : request, "rec" : rec})
 
-
-@app.get("/search", response_class=HTMLResponse)
-async def get_search_results(request: Request, search: str):
-    recs = db.get_recordings_by_date(title_filter=search)
-    titles = db.get_titles()
-    return templates.TemplateResponse("search.html", {"request" : request, "recordings": recs, "titles" : titles})
-
 manager = ConnectionManager()
 
 class CommandRunner():
-    metronome = None
 
     def __init__(self):
         self.midiplayer = None
@@ -79,6 +73,7 @@ class CommandRunner():
         self.commands = { "play" : self.play,
                     "stop" : self.stop,
                     "start_metronome" : self.start_metronome,
+                    "update_metronome" : self.update_metronome,
                     "stop_metronome" : self.stop_metronome,
                     "set_title" : self.set_title,
                     "set_favourite" : self.set_favourite
@@ -95,28 +90,26 @@ class CommandRunner():
         rec = db.get_recording(id)
         if self.midiplayer != None:
             self.midiplayer.stop()
-        self.midiplayer = MidiPlayer(bytes = rec.data.data)
+        midfile = base64.b64decode(rec["data"])
+        self.midiplayer = MidiPlayer(bytes = midfile)
         self.midiplayer.start()
 
     def stop(self, message):
         self.midiplayer.stop()
         self.midiplayer = None
 
-    def start_metronome(self, message):
-        bpm = message['bpm']
-        beats = message['beats']
-        volume = message['volume']
+    def update_metronome(self, message):
+        message['loop_id'] = 1
+        db.set_metronome_settings(message)
+        metronome.update_metronome()
 
-        if CommandRunner.metronome == None:
-            CommandRunner.metronome = Metronome()
-            CommandRunner.metronome.set(bpm, beats, volume)
-            CommandRunner.metronome.start()
-        else:
-            CommandRunner.metronome.set(bpm, beats, volume)
+    def start_metronome(self, message):
+        metronome.start_metronome()
+        if not metronome.is_alive():
+            metronome.start()
 
     def stop_metronome(self, message):
-        CommandRunner.metronome.stop()
-        CommandRunner.metronome = None
+        metronome.stop_metronome()
 
     def set_title(self, message):
         id = message['id']
@@ -144,7 +137,7 @@ async def consumer_handler(websocket):
 async def producer_handler(websocket):
     while True:
         msg = await msg_queue.get()
-        msg_content = json.loads(msg) 
+        msg_content = json.loads(msg)
         print(msg_content)
         if msg_content['msg'] == 'new_recording':
             print('new_rec_received')
