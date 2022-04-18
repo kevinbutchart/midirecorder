@@ -10,6 +10,7 @@ from midiplayer import MidiPlayer
 from metronome import Metronome
 from connectionmanager import ConnectionManager
 from pathlib import Path
+from player_client import MidiPlayClient
 import asyncio
 import uvicorn
 import json
@@ -99,15 +100,13 @@ class CommandRunner():
     def update_metronome(self, message):
         message['loop_id'] = 1
         db.set_metronome_settings(message)
-        metronome.update_metronome()
+        MidiPlayClient.update_metronome()
 
     def start_metronome(self, message):
-        metronome.start_metronome()
-        if not metronome.is_alive():
-            metronome.start()
+        MidiPlayClient.start_metronome()
 
     def stop_metronome(self, message):
-        metronome.stop_metronome()
+        MidiPlayClient.stop_metronome()
 
     def set_title(self, message):
         id = message['id']

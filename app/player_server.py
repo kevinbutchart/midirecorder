@@ -5,11 +5,9 @@ from metronome import Metronome
 metronome = Metronome()
 metronome.start()
 
-
-HOST = "0.0.0.0"  # The server's hostname or IP address
 PORT = 9900  # The port used by the server
 
-class Echo(protocol.Protocol):
+class Server(protocol.Protocol):
     def dataReceived(self, data):
         msg = data.decode()
         cmd = msg.strip().split(' ')
@@ -25,10 +23,10 @@ class Echo(protocol.Protocol):
                     metronome.stop_metronome()
         self.transport.write("ok\n".encode())
 
-class EchoFactory(protocol.Factory):
+class ServerFactory(protocol.Factory):
     def buildProtocol(self, addr):
-        return Echo()
+        return Server()
 
 if __name__ == '__main__':
-    endpoints.serverFromString(reactor, "tcp:"+str(PORT)).listen(EchoFactory())
+    endpoints.serverFromString(reactor, "tcp:"+str(PORT)).listen(ServerFactory())
     reactor.run()
