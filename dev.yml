@@ -3,6 +3,7 @@ services:
   pianorecorder:
     restart: always
     image: kevinbutchart/pianorecorder:latest
+    build: app
     privileged: true
     ports:
       - 80:8000
@@ -14,6 +15,7 @@ services:
   midirecorder:
     restart: always
     image: kevinbutchart/pianorecorder:latest
+    build: app
     privileged: true
     volumes:
       -  ./app:/app
@@ -22,11 +24,13 @@ services:
     restart: always
     image: kevinbutchart/pianorecorder:latest
     privileged: true
+    environment:
+      - PYTHONUNBUFFERED=1
     ports:
       - 9900:9900
     volumes:
       -  ./app:/app
-    command: /app/midi_server.py
+    command: /app/player_server.py
   database:
     restart: always
     image: andresvidal/rpi3-mongodb3:latest

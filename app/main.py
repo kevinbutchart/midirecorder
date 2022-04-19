@@ -50,7 +50,8 @@ async def read_item(request: Request):
 @app.get("/rhythm", response_class=HTMLResponse)
 async def get_rhythm(request: Request):
     settings = db.get_metronome_settings()
-    return templates.TemplateResponse("rhythm.html", {"request" : request, "settings" : settings})
+    loops = { 1 : db.get_loops(1), 2: db.get_loops(2), 3: db.get_loops(3), 4: db.get_loops(4)}
+    return templates.TemplateResponse("rhythm.html", {"request" : request, "settings" : settings, "loops" : loops})
 
 
 def midi_to_audio(infile, outfile):
@@ -98,7 +99,6 @@ class CommandRunner():
         self.midiplayer = None
 
     def update_metronome(self, message):
-        message['loop_id'] = 1
         db.set_metronome_settings(message)
         MidiPlayClient.update_metronome()
 

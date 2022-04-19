@@ -7,8 +7,6 @@ services:
     privileged: true
     ports:
       - 80:8000
-    volumes:
-      -  $HOME/.config/pianorecorder/recordings.db:/app/recordings.db
     environment:
       - PYTHONUNBUFFERED=1
     command: /app/gunicorn_start.sh
@@ -17,16 +15,28 @@ services:
     image: kevinbutchart/pianorecorder:latest
     build: app
     privileged: true
-    volumes:
-      -  $HOME/.config/pianorecorder/recordings.db:/app/recordings.db
     command: /app/recorder_start.sh
+  midiplayer:
+    restart: always
+    image: kevinbutchart/pianorecorder:latest
+    privileged: true
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 9900:9900
+    volumes:
+      -  ./app:/app
+    command: /app/player_server.py
   database:
+    restart: always
     image: andresvidal/rpi3-mongodb3:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    command: mongod --journal --smallfiles
     ports:
       - 27017:27017
+      - 28017:28017
     volumes:
       - mongodb_data_container:/data/db
 

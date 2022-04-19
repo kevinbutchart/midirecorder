@@ -60,13 +60,13 @@ var prInstance = (function() {
             }
             mainsocket.send(JSON.stringify(cmd))
         },
-        update_metronome : function(bpm, beats, volume)
+        update_metronome : function(bpm, volume, loop_id)
         {
             var cmd = {
                 "command" : "update_metronome",
                 "bpm" : bpm,
-                "beats" : beats,
-                "volume" : volume
+                "volume" : volume,
+                "loop_id" : loop_id
             }
             mainsocket.send(JSON.stringify(cmd))
         },

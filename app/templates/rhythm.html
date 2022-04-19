@@ -1,45 +1,6 @@
 <!DOCTYPE html>
 <html>
     {% include 'header.html' %}
-<head>
-<style>
-.slidecontainer {
-  width: 100%;
-}
-
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 25px;
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-.slider:hover {
-  opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #04AA6D;
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  background: #04AA6D;
-  cursor: pointer;
-}
-</style>
-</head>
-
 <body>
 
 <div class="container-fluid">
@@ -51,21 +12,37 @@
 <div class="slidecontainer">
   <p>Tempo: <span id="tempo"></span></p>
   <input type="range" min="10" max="220" value="{{settings['bpm']}}" class="slider" id="tempoRange">
-  <p>Beats Per Bar: <span id="beats"></span></p>
+  <!-- <p>Beats Per Bar: <span id="beats"></span></p>
   <input type="range" min="1" max="6" value="{{settings['beats']}}" class="slider" id="beatsRange">
+-->
   <p>Volume: <span id="volume"></span></p>
   <input type="range" min="1" max="127" value="{{settings['volume']}}" class="slider" id="volumeRange">
+
+  <select id="loopList" class="form-select" aria-label="Default select example" onchange="update_metronome()">
+    <option disabled>1 beat ---------</option>
+    {% for lp in loops[1] %}
+    <option value="{{lp['_id']}}">{{lp['name']}}</option>
+    {% endfor %}
+    <option disabled>2 beat ---------</option>
+    {% for lp in loops[2] %}
+    <option value="{{lp['_id']}}">{{lp['name']}}</option>
+    {% endfor %}
+    <option disabled>3 beat ---------</option>
+    {% for lp in loops[3] %}
+    <option value="{{lp['_id']}}">{{lp['name']}}</option>
+    {% endfor %}
+    <option disabled>4 beat ---------</option>
+    {% for lp in loops[4] %}
+    <option value="{{lp['_id']}}">{{lp['name']}}</option>
+    {% endfor %}
+  </select>
 </div>
+
 
 <a href="#" class="btn btn-lg" style="background:lightgray" onclick="start_metronome()"><i class="bi bi-play-circle-fill" style="color:cornflowerblue"></i>Start</a>
 <a href="#" class="btn btn-lg" style="background:lightgray" onclick="stop_metronome()"><i class="bi bi-stop-circle-fill"></i>Stop</a>
 
 <!--
-<select class="form-select" aria-label="Default select example">
-  {% for lp in loops %}
-  <option value="{{loop['_id']}}">{{lp['name']}}</option>
-  {% endfor %}
-</select>
 -->
 <script>
 
@@ -83,9 +60,9 @@ function connectSlider(rangeElem, displayElem) {
 
 function update_metronome() {
     var bpm = document.getElementById("tempoRange").value;
-    var beats = document.getElementById("beatsRange").value;
     var volume = document.getElementById("volumeRange").value;
-    prInstance.update_metronome(+bpm, +beats, +volume)
+    var loop_id = document.getElementById("loopList").value;
+    prInstance.update_metronome(+bpm, +volume, +loop_id)
 }
 
 function stop_metronome() {
@@ -98,7 +75,6 @@ function start_metronome() {
 }
 
 connectSlider("tempoRange", "tempo");
-connectSlider("beatsRange", "beats");
 connectSlider("volumeRange", "volume");
 
 </script>
@@ -107,6 +83,8 @@ connectSlider("volumeRange", "volume");
 <script>
     $( document ).ready(function() {
         document.getElementById("nav_rhythm").classList.add('active');
+        var loopList = document.getElementById("loopList");
+        loopList.value = {{settings['loop_id']}}
         console.log( "ready!" );
     });
 

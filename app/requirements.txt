@@ -12,7 +12,7 @@ mido
 ordered-set
 psutil
 pydantic
-pymongo
+pymongo==3.12.3
 python-rtmidi
 python-multipart
 rtmidi

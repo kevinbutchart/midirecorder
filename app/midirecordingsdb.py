@@ -61,8 +61,8 @@ class MidiRecordingsDB:
         return recordings_dict
 
     def get_loops(self, beats):
-        query = { "beats" : beats }
-        return self.loops.find(query, {"name" : 1})
+        query = { "beats" : beats}
+        return self.loops.find(query)
 
     def get_loop(self, id):
         query = { "_id" : id }
