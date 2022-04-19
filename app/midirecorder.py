@@ -22,7 +22,6 @@ import argparse
 import threading
 from ordered_set import OrderedSet
 from io import BytesIO
-import setproctitle
 
 from midiplayer import MidiPlayer
 
@@ -218,7 +217,6 @@ class MidiRecorder():
                 #dbus_client.notify_new_recording(rec_id)
 
 if __name__ == "__main__":
-    setproctitle.setproctitle('midirecorder')
     signal.signal(signal.SIGUSR1, handle_pdb)
     print(f"Started process: {os.getpid()}")
     db = MidiRecordingsDB()

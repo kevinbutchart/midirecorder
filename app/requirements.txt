@@ -1,5 +1,3 @@
-aiofiles
-setproctitle
 click
 fastapi
 greenlet
@@ -11,17 +9,11 @@ jinja2
 mido
 ordered-set
 psutil
-pydantic
 pymongo==3.12.3
 python-rtmidi
-python-multipart
-rtmidi
 starlette
 twisted
 typing-extensions
 uvicorn
-uvloop
 watchdog
 websockets
-zipp
-midi2audio
