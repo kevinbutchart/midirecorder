@@ -33,7 +33,7 @@ services:
     command: /app/player_server.py
   database:
     restart: always
-    image: andresvidal/rpi3-mongodb3:latest
+    image: kevinbutchart/mongodb:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword

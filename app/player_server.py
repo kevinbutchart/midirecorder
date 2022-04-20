@@ -11,7 +11,6 @@ class Server(protocol.Protocol):
     def dataReceived(self, data):
         msg = data.decode()
         cmd = msg.strip().split(' ')
-        print(cmd)
         if cmd[0] == 'metronome':
             if len(cmd) == 2:
                 result = 'ok\n'.encode()

@@ -1,44 +1,36 @@
-version: "2.2"
+version: "3.3"
 services:
   pianorecorder:
-    restart: unless-stopped 
+    restart: unless-stopped
     image: kevinbutchart/pianorecorder:latest
     build: app
     privileged: true
-    mem_limit: 250m
-    memswap_limit: 250m
     ports:
       - 80:8000
     environment:
       - PYTHONUNBUFFERED=1
     command: /app/gunicorn_start.sh
   midirecorder:
-    restart: unless-stopped 
+    restart: unless-stopped
     image: kevinbutchart/pianorecorder:latest
     build: app
-    mem_limit: 250m
-    memswap_limit: 250m
     privileged: true
     command: /app/recorder_start.sh
   midiplayer:
-    restart: unless-stopped 
+    restart: unless-stopped
     image: kevinbutchart/pianorecorder:latest
     privileged: true
     build: app
-    mem_limit: 250m
-    memswap_limit: 250m
     environment:
       - PYTHONUNBUFFERED=1
     ports:
       - 9900:9900
     volumes:
       -  ./app:/app
-    command: /app/player_server.py
+    command: /app/player_start.sh
   database:
-    restart: unless-stopped 
-    mem_limit: 250m
-    memswap_limit: 250m
-    image: andresvidal/rpi3-mongodb3:latest
+    restart: unless-stopped
+    image: kevinbutchart/mongodb:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword

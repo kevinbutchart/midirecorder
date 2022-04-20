@@ -125,11 +125,13 @@ class CommandRunner():
 
 async def consumer_handler(websocket):
     cmd_runner = CommandRunner()
-    while True:
-        message = await websocket.receive_text()
-        print(message)
-        message = json.loads(message)
-        cmd_runner.run(message)
+    try:
+        while True:
+            message = await websocket.receive_text()
+            message = json.loads(message)
+            cmd_runner.run(message)
+    except:
+        pass
 
 async def producer_handler(websocket):
     while True:
