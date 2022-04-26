@@ -4,7 +4,7 @@ from midirecordingsdb import MidiRecordingsDB
 import base64
 
 olddb = OldDB("sqlite:///./recordings.db") 
-newdb = MidiRecordingsDB("mongodb://pianorecorder_database_1")
+newdb = MidiRecordingsDB("mongodb://pianorecorder-database-1")
 recs = olddb.get_recordings()
 
 for r in recs:

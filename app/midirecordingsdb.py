@@ -10,7 +10,8 @@ import pymongo
 
 from bson.objectid import ObjectId
 
-db_url = 'mongodb://pianorecorder_database_1'
+db_url = 'mongodb://pianodb'
+#db_url = "mongodb+srv://kevinbutchart:ZhuZaiLunDun1mg@cluster0.hgww9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
 class MidiRecordingsDB:
     def __init__(self):
@@ -19,6 +20,7 @@ class MidiRecordingsDB:
         self.recordings = self.db["recordings"]
         self.settings = self.db["settings"]
         self.loops = self.db["loops"]
+        self.tags = self.db["tags"]
         self.recordings.create_index("datetime")
 
     def get_recording(self, id):
@@ -63,6 +65,9 @@ class MidiRecordingsDB:
     def get_loops(self, beats):
         query = { "beats" : beats}
         return self.loops.find(query)
+
+    def get_tags(self):
+        return self.tags.find()
 
     def get_loop(self, id):
         query = { "_id" : id }

@@ -1,6 +1,6 @@
 var prInstance = (function() {
     var showOnlyFavourites = false
-    var mainsocket = new WebSocket('ws://' + location.host + '/main')
+    var mainsocket = new WebSocket('wss://' + location.host + '/main')
 
 
     mainsocket.onmessage = function(event) {

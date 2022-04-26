@@ -1,3 +1,7 @@
 #!/bin/bash
 disablemmcled
-exec /app/midirecorder.py
+/app/midirecorder.py&
+/app/player_server.py&
+wait -n # wait till either process exits
+
+# relying on the container to restart

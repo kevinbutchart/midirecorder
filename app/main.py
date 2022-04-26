@@ -3,6 +3,7 @@ from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect, Form, Back
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.responses import FileResponse
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 from midirecordingsdb import MidiRecordingsDB
@@ -17,7 +18,6 @@ import json
 import tempfile
 import queue
 import base64
-from filewatcher import FileWatcher
 
 from os.path import dirname, join
 
@@ -53,6 +53,17 @@ async def get_rhythm(request: Request):
     loops = { 1 : db.get_loops(1), 2: db.get_loops(2), 3: db.get_loops(3), 4: db.get_loops(4)}
     return templates.TemplateResponse("rhythm.html", {"request" : request, "settings" : settings, "loops" : loops})
 
+@app.get("/certificate")
+async def certificate(request: Request):
+    return FileResponse('static/pianorecorder.p12', media_type='application/octet-stream',filename='pianorecorder.p12')
+
+@app.get("/cer")
+async def certificate(request: Request):
+    return FileResponse('static/pianorecorder.crt', media_type='application/octet-stream',filename='pianorecorder.crt')
+
+@app.get("/serviceworker.js")
+async def serviceworker(request: Request):
+    return FileResponse('static/serviceworker.js')
 
 def midi_to_audio(infile, outfile):
     subprocess.call(['fluidsynth', '-ni', './Yamaha.sf2', infile, '-F', outfile, '-r', '44100', '-g', '0.5'])
@@ -150,7 +161,6 @@ async def websocket_main(websocket: WebSocket):
     try:
         global msg_queue
         msg_queue = asyncio.Queue()
-        FileWatcher(msg_queue)
         consumer_task = asyncio.ensure_future(
             consumer_handler(websocket))
         producer_task = asyncio.ensure_future(

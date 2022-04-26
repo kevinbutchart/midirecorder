@@ -2,7 +2,7 @@
 import base64
 import pymongo
 
-dbclient = pymongo.MongoClient("mongodb://pianorecorder_database_1")
+dbclient = pymongo.MongoClient("mongodb://pianorecorder-database-1")
 db = dbclient["pianodb"]
 call = db.command("dbstats")
 database = call['db']

@@ -21,13 +21,13 @@
                 <td colspan="3">Date: {{date}}</td>
             <tr>
             {% for rec in recordings[date] %}
-            <tr onclick="window.location='/recording/{{rec._id}}';"> 
+            <tr onclick="window.location='/recording/{{rec._id}}';">
                 <td>{{rec.name}}</a></td>
                 <td>{{rec.duration | round}}</td>
                 <td>{{rec.datetime.time().strftime("%H:%M:%S")}}</td>
             </tr>
             {% endfor %}
-            
+
             {% endfor %}
         </ul>
  </tbody>
@@ -35,8 +35,26 @@
 <script>
     $( document ).ready(function() {
         document.getElementById("nav_home").classList.add('active');
+        registerSW();
         console.log( "ready!" );
     });
+
+    // Register the Service Worker
+    async function registerSW() {
+      if ('serviceWorker' in navigator) {
+        try {
+          await navigator
+                .serviceWorker
+                .register('/serviceworker.js');
+          console.log('registered');
+        }
+        catch (e) {
+          console.log('SW registration failed');
+        }
+      }
+
+
+    }
 
 </script>
 </body>

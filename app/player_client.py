@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import socket
 
-HOST = "pianorecorder_midiplayer_1"  # The server's hostname or IP address
+HOST = "midiplayer"  # The server's hostname or IP address
 PORT = 9900  # The port used by the server
 
 class MidiPlayClient:
 
     def send_message(str):
+        print(str)
         res = False
         str = str + '\n'
         msgbytes = str.encode()

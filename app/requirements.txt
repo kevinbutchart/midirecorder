@@ -9,7 +9,7 @@ jinja2
 mido
 ordered-set
 psutil
-pymongo==3.12.3
+pymongo
 python-rtmidi
 starlette
 twisted

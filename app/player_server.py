@@ -10,6 +10,7 @@ PORT = 9900  # The port used by the server
 class Server(protocol.Protocol):
     def dataReceived(self, data):
         msg = data.decode()
+        print(msg)
         cmd = msg.strip().split(' ')
         if cmd[0] == 'metronome':
             if len(cmd) == 2:
