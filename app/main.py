@@ -44,7 +44,7 @@ async def app_shutdown():
 
 @app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
-    recs = db.get_recordings_by_date(limit=150)
+    recs = db.get_recording_sessions(limit=150)
     return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs})
 
 @app.get("/rhythm", response_class=HTMLResponse)

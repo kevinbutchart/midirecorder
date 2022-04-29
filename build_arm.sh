@@ -1,3 +1,3 @@
 #!/bin/bash
-TAG_VERSION="1.0"
-docker buildx build --platform linux/arm64 -t kevinbutchart/pianorecorder:latest -t kevinbutchart/pianorecorder:"$TAG_VERSION" --push app
+TAG_VERSION="dev"
+docker buildx build --platform linux/arm64/v8 -t kevinbutchart/pianorecorder:"$TAG_VERSION" -f app/Dockerfile64 --push app

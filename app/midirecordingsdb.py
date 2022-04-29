@@ -11,7 +11,7 @@ import pymongo
 from bson.objectid import ObjectId
 
 db_url = 'mongodb://pianodb'
-#db_url = "mongodb+srv://kevinbutchart:ZhuZaiLunDun1mg@cluster0.hgww9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+#db_url = "mongodb+srv://kevinbutchart:<pw>@cluster0.hgww9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
 class MidiRecordingsDB:
     def __init__(self):
@@ -30,6 +30,9 @@ class MidiRecordingsDB:
         print(res)
         return res
 
+    def get_last_recording():
+        return self.recordings.find().sort("datetime", -1).limit(1)
+
     def add_recording_int(self, record):
         id = self.recordings.insert_one(record)
         return id
@@ -40,26 +43,42 @@ class MidiRecordingsDB:
         name = date_time_obj.strftime("%Y_%m%d_%H%M%S.mid")
         duration = duration
         favourite = False
+        session = date_time_obj
+        last_rec = get_last_recording()
+        if last_rec:
+            if (date_time_obj < last_rec["datetime"]) > datetime.timedelta(0, 1800):
+                session = last_rec["session"]
+
         new_recording =  {"title": title,
                           "name": name,
                           "datetime": date_time_obj,
                           "duration": duration,
+                          "session" : session,
                           "favourite": favourite,
                           "data" : base64.b64encode(data)}
         id = self.recordings.insert_one(new_recording)
         return id
 
-    def get_recordings_by_date(self, limit = None):
+    def get_recordings_by_date(self, limit = 0):
         recordings_dict = OrderedDict()
-        query = self.recordings.find().sort("datetime", -1)
-        if limit is not None:
-            query = query.limit(limit)
+        query = self.recordings.find().sort("datetime", -1).limit(0)
 
         for instance in query:
             date = instance["datetime"].date()
             day_recordings = recordings_dict.get(date, [])
             day_recordings.append( instance )
             recordings_dict[date] = day_recordings
+        return recordings_dict
+
+    def get_recording_sessions(self, limit = 0):
+        recordings_dict = OrderedDict()
+        query = self.recordings.find().sort("datetime", -1).limit(limit)
+
+        for instance in query:
+            session = instance["session"]
+            session_recordings = recordings_dict.get(session, [])
+            session_recordings.append( instance )
+            recordings_dict[session] = session_recordings
         return recordings_dict
 
     def get_loops(self, beats):

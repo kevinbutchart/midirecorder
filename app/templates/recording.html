@@ -22,7 +22,7 @@ textarea {
   <tbody>
             <tr class="table-primary">
                 <td colspan="2">Recording</td> </tr>
-                <tr> <td>Name</td><td> <input>{{rec.title}}</input></td><tr>
+                <tr> <td>Title</td><td> <input>{{rec.title}}</input></td><tr>
                 <tr> <td>Date</td><td> {{rec.datetime.date()}}</td><tr>
                 <tr> <td>Time</td><td> {{rec.datetime.time().strftime("%H:%M:%S")}}</td><tr>
                 <tr> <td>Duration</td><td>{{rec.duration | round}}</td></tr>

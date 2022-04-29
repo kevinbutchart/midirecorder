@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  pianorecorder:
+    restart: unless-stopped
+    image: kevinbutchart/pianorecorder:latest
+    ports:
+      - 443:8443
+    volumes:
+      - /sys:/sys
+      - /proc/device-tree:/proc/device-tree
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: /app/gunicorn_start.sh
+  midirecorder:
+    restart: unless-stopped
+    image: kevinbutchart/pianorecorder:latest
+    command: /app/recorder_start.sh
+    devices:
+      - /dev/snd/seq:/dev/snd/seq
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 9900:9900
+    volumes:
+      - /sys:/sys
+      - /proc/device-tree:/proc/device-tree
+    command: /app/recorder_start.sh
+  database:
+    restart: unless-stopped
+    hostname: pianodb 
+    image: mongo:3.6.23
+    ports:
+      - 27017:27017
+      - 28017:28017
+    volumes:
+      - mongodb_data_container:/data/db
+volumes:
+  mongodb_data_container:

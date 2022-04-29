@@ -9,18 +9,26 @@
 <table class="table table-hover table-striped table-borderless">
   <thead>
     <tr>
-      <th scope="col">Name</th>
+      <th scope="col">Title</th>
       <th scope="col">Secs</th>
       <th scope="col">Time</th>
     </tr>
   </thead>
   <tbody>
         <ul data-role="listview">
-            {% for date in recordings %}
+            {% set ns = namespace(sessiondate = None) %}
+            {% for session in recordings %}
+            {% if session.date() != ns.sessiondate %}
+            {% set ns.sessiondate = session.date() %}
             <tr class="table-primary">
-                <td colspan="3">Date: {{date}}</td>
+                <td colspan="3">Date: {{session.date()}}</td>
+            </tr>
+            {% endif %}
+
+            <tr class="table-secondary">
+                <td colspan="3">Time: {{session.time().strftime("%H:%M")}}</td>
             <tr>
-            {% for rec in recordings[date] %}
+            {% for rec in recordings[session] %}
             <tr onclick="window.location='/recording/{{rec._id}}';">
                 <td>{{rec.name}}</a></td>
                 <td>{{rec.duration | round}}</td>
