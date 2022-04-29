@@ -10,7 +10,8 @@ import pymongo
 
 
 if __name__ == "__main__":
-    dbclient = pymongo.MongoClient()
+    db_url = sys.argv[1]
+    dbclient = pymongo.MongoClient(db_url)
     db = dbclient["pianodb"]
     recordings = db["recordings"]
     recs = recordings.find().sort("datetime", 1)

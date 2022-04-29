@@ -53,13 +53,13 @@ async def get_rhythm(request: Request):
     loops = { 1 : db.get_loops(1), 2: db.get_loops(2), 3: db.get_loops(3), 4: db.get_loops(4)}
     return templates.TemplateResponse("rhythm.html", {"request" : request, "settings" : settings, "loops" : loops})
 
-@app.get("/certificate")
-async def certificate(request: Request):
-    return FileResponse('static/pianorecorder.p12', media_type='application/octet-stream',filename='pianorecorder.p12')
+@app.get("/settings", response_class=HTMLResponse)
+async def get_settings(request: Request):
+    return templates.TemplateResponse("settings.html", {"request" : request})
 
 @app.get("/cer")
 async def certificate(request: Request):
-    return FileResponse('static/pianorecorder.crt', media_type='application/octet-stream',filename='pianorecorder.crt')
+    return FileResponse('static/ca.crt', media_type='application/octet-stream',filename='ca.crt')
 
 @app.get("/serviceworker.js")
 async def serviceworker(request: Request):
