@@ -64,6 +64,7 @@ subjectAltName       = @alt_names
 
 [alt_names]
 DNS.1 = pianorecorder
+DNS.2 = piano64
 
 ####################################################################
 # Extensions for when we sign normal certs (specified as default)
