@@ -49,7 +49,7 @@ req_extensions = v3_req
 C  = GB
 O  = gamoeba
 OU = Engineering
-CN = pianorecorder
+CN = www.gamoeba.com
 
 # Allow client and server auth. You may want to only allow server auth.
 # Link to SAN names.
@@ -70,8 +70,4 @@ subjectAltName       = @alt_names
 
 
 [alt_names]
-DNS.1 = pianorecorder
-DNS.2 = pianorecorder-1
-DNS.3 = pianorecorder-2
-DNS.4 = pianorecorder-3
-DNS.5 = pianorecorder-4
+DNS.1 = www.gamoeba.com 

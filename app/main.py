@@ -79,8 +79,6 @@ manager = ConnectionManager()
 class CommandRunner():
 
     def __init__(self):
-        self.midiplayer = None
-
         self.commands = { "play" : self.play,
                     "stop" : self.stop,
                     "start_metronome" : self.start_metronome,
@@ -98,16 +96,10 @@ class CommandRunner():
     def play(self, message):
         print(message, flush=True)
         id = message['id']
-        rec = db.get_recording(id)
-        if self.midiplayer != None:
-            self.midiplayer.stop()
-        midfile = base64.b64decode(rec["data"])
-        self.midiplayer = MidiPlayer(bytes = midfile)
-        self.midiplayer.start()
+        MidiPlayClient.play_midi(id)
 
     def stop(self, message):
-        self.midiplayer.stop()
-        self.midiplayer = None
+        MidiPlayClient.stop_midi()
 
     def update_metronome(self, message):
         db.set_metronome_settings(message)

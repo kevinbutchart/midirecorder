@@ -26,3 +26,9 @@ class MidiPlayClient:
 
     def stop_metronome():
         return MidiPlayClient.send_message("metronome stop")
+
+    def play_midi(id):
+        return MidiPlayClient.send_message("player play " + id)
+
+    def stop_midi():
+        return MidiPlayClient.send_message("player stop")

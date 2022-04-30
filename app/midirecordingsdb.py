@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from pprint import pprint
 from collections import OrderedDict
@@ -30,8 +30,8 @@ class MidiRecordingsDB:
         print(res)
         return res
 
-    def get_last_recording():
-        return self.recordings.find().sort("datetime", -1).limit(1)
+    def get_last_recording(self):
+        return self.recordings.find_one(sort=[("datetime", -1)])
 
     def add_recording_int(self, record):
         id = self.recordings.insert_one(record)
@@ -44,9 +44,13 @@ class MidiRecordingsDB:
         duration = duration
         favourite = False
         session = date_time_obj
-        last_rec = get_last_recording()
+        last_rec = self.get_last_recording()
+        print(last_rec)
         if last_rec:
-            if (date_time_obj < last_rec["datetime"]) > datetime.timedelta(0, 1800):
+            delta = date_time_obj - last_rec["datetime"]
+            print(delta)
+            if delta < timedelta(0, 1800):
+                print("use current session")
                 session = last_rec["session"]
 
         new_recording =  {"title": title,

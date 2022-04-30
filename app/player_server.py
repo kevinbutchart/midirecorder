@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 from twisted.internet import protocol, reactor, endpoints
 from metronome import Metronome
+from midirecordingsdb import MidiRecordingsDB
+from midiplayer import MidiPlayer
+import base64
 
 metronome = Metronome()
 metronome.start()
+db = MidiRecordingsDB()
+player = None
 
 PORT = 9900  # The port used by the server
 
 class Server(protocol.Protocol):
     def dataReceived(self, data):
+        global player
+        global metronome
         msg = data.decode()
         print(msg)
         cmd = msg.strip().split(' ')
@@ -22,6 +29,20 @@ class Server(protocol.Protocol):
                     metronome.update_metronome()
                 if subcmd == 'stop':
                     metronome.stop_metronome()
+        if cmd[0] == 'player':
+            if cmd[1] == 'play':
+                id = cmd[2]
+                rec = db.get_recording(id)
+                if player != None:
+                    player.stop()
+                midfile = base64.b64decode(rec["data"])
+                player = MidiPlayer(bytes = midfile)
+                player.start()
+            if cmd[1] == 'stop':
+                if player != None:
+                   player.stop()
+                player = None
+
         self.transport.write("ok\n".encode())
 
 class ServerFactory(protocol.Factory):
