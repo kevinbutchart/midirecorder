@@ -66,7 +66,7 @@ async def serviceworker(request: Request):
     return FileResponse('static/serviceworker.js')
 
 def midi_to_audio(infile, outfile):
-    subprocess.call(['fluidsynth', '-ni', './Yamaha.sf2', infile, '-F', outfile, '-r', '44100', '-g', '0.5'])
+    subprocess.call(['fluidsynth', '-ni', '/sf/yamaha.sf3', infile, '-F', outfile, '-r', '48000', '-g', '0.7'])
 
 
 @app.get("/recording/{id}", response_class=HTMLResponse)
@@ -138,21 +138,22 @@ async def consumer_handler(websocket):
 
 async def producer_handler(websocket):
     while True:
-        msg = await msg_queue.get()
-        msg_content = json.loads(msg)
-        print(msg_content)
-        if msg_content['msg'] == 'new_recording':
-            print('new_rec_received')
-            cmd = { 'command' : 'reload' }
-            cmdstr = json.dumps(cmd)
-            await websocket.send_text(cmdstr)
+        try:
+            with db.recordings.watch( [{'$match': {'operationType': 'insert'}}]) as stream:
+                for insert_change in stream:
+                    print(insert_change)
+                    cmd = { 'command' : 'reload' }
+                    cmdstr = json.dumps(cmd)
+                    await websocket.send_text(cmdstr)
+
+        except Exception as e:
+            print('OOPS!! Some ERROR Occurred')
+            print(e)
 
 @app.websocket("/main")
 async def websocket_main(websocket: WebSocket):
     await manager.connect(websocket)
     try:
-        global msg_queue
-        msg_queue = asyncio.Queue()
         consumer_task = asyncio.ensure_future(
             consumer_handler(websocket))
         producer_task = asyncio.ensure_future(

@@ -9,7 +9,7 @@ RUN python3 -m pip install --upgrade pip &&\
 FROM arm64v8/python:3.9-slim-bullseye as runtime-image
 COPY --from=compile-image /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
-RUN apt-get update && apt-get install -yy --no-install-recommends alsa-utils libasound2 librtmidi5 &&\
+RUN apt-get update && apt-get install -yy --no-install-recommends fluidsynth alsa-utils libasound2 librtmidi5 &&\
     rm -rf /var/lib/apt/lists/*
 
 FROM runtime-image
