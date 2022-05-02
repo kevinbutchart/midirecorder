@@ -1,0 +1,35 @@
+table.recordingsTable {
+  font-family: "Times New Roman", Times, serif;
+  border: 1px solid #FFFFFF;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.recordingsTable td, table.recordingsTable th {
+  border: 1px solid #FFFFFF;
+  padding: 3px 2px;
+}
+table.recordingsTable tbody td {
+  font-size: 13px;
+}
+table.recordingsTable tr:nth-child(even) {
+  background: #CBCBCB;
+}
+table.recordingsTable thead {
+  background: #4D7257;
+  border-bottom: 5px solid #FFFFFF;
+}
+table.recordingsTable thead th {
+  font-size: 17px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: left;
+  border-left: 2px solid #FFFFFF;
+}
+table.recordingsTable thead th:first-child {
+  border-left: none;
+}
+
+table.recordingsTable tfoot td {
+  font-size: 14px;
+}

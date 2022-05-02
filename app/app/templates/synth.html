@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/all.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css?ver=v7') }}">
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/table.css?ver=v3') }}">
+
+        <script src="{{ url_for('static', path='/js/main.js') }}" ></script>
+
+    </head>
+    <body>
+        {% include 'navbar.html' %}
+
+        <h1> Download File </h1>
+        <p>
+        <a href="/{{ midifile }}"> Midi File </a>
+        </p>
+        <p>
+        <div>
+            <div id="message">
+                Sythesized audio will display here when available
+            </div>
+            <div id="synth_audio">
+                <audio controls>
+                    <source src="/{{ oggfile }}" type="audio/ogg" />
+                    <em>Sorry, your browser doesn't support HTML5 audio.</em>
+                </audio>
+            </div>
+        </div>
+        </p>
+    </body>

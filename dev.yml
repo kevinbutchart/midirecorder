@@ -2,11 +2,13 @@ version: "3.3"
 services:
   pianorecorder:
     volumes:
-      -  ./app:/app
+      -  ./app/app:/app
+      -  ./app/sf:/sf
     environment:
       - PYTHONUNBUFFERED=1
   midirecorder:
     volumes:
-      -  ./app:/app
+      -  ./app/app:/app
+      -  ./app/sf:/sf
     environment:
       - PYTHONUNBUFFERED=1

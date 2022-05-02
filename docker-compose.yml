@@ -37,8 +37,7 @@ services:
       - 28017:28017
     volumes:
       - mongodb_data_container:/data/db
-    command:
-      - mongod --smallfiles --journal --replSet rs0
+    command: mongod
 volumes:
   mongodb_data_container:
   pianorecorder_container:

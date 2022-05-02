@@ -1,0 +1,46 @@
+<h1> Settings </h1>
+
+<h2> Dropbox </h2>
+
+    <a href="https://www.dropbox.com/oauth2/authorize?client_id=gxl669p2epvz7l5&response_type=code"
+          target="popup" 
+            onclick="window.open('https://www.dropbox.com/oauth2/authorize?client_id=gxl669p2epvz7l5&response_type=code','popup','width=600,height=600'); return false;">
+            Link to Dropbox
+    </a>
+    <p>
+    Click the link above, and then enter the code you get from the Dropbox authorization
+    </p>
+    <script>
+var registersocket = new WebSocket('ws://' + location.host + '/dregister')
+
+registersocket.onmessage = function(event) {
+   if (event.data === "success") {
+      alert("SUCCESS: Dropbox account linked")
+   } else if (event.data === "failure") {
+      alert("FAILED: Dropbox account not linked")
+   }
+
+}
+
+function register()
+{   
+   
+   var dcode = document.getElementById('dcode')
+   var code = dcode.value
+   dcode.value = ""
+   registersocket.send(code)
+}
+
+function enabledisable() {
+     if(document.getElementById("dcode").value==="") { 
+        document.getElementById('register').disabled = true; 
+     } else { 
+        document.getElementById('register').disabled = false;
+     }
+}
+
+
+</script>
+  <label for="dcode">Dropbox Code:</label>
+  <input type="text" id="dcode" name="dcode" onkeyup="enabledisable()" onpaste="enabledisable()" oninput="enabledisable()"><br><br>
+  <input type="submit" id="register" onclick="register()" value="Link to Dropbox" disabled>

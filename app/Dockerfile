@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -yy --no-install-recommends fluidsynth als
     rm -rf /var/lib/apt/lists/*
 
 FROM runtime-image
+COPY sf/. /sf/.
+COPY app/. /app/ 
 WORKDIR /app
-COPY . .
 ENV PATH=/root/.local/bin:/app/bin:$PATH
