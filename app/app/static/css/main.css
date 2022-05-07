@@ -38,3 +38,35 @@
   height: auto;
   display: inline-block;
 }
+
+.tag-item {
+  font-size: 16px;
+  font-family: arial;
+  border: 1px solid #ccc;
+  user-select: none;
+  pointer-events:none;
+}
+
+.tag-delete {
+   color:cornflowerblue;
+}
+
+@keyframes jiggle {
+  0% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+.tag-item[data-editing="true"] {
+  animation: jiggle 0.2s infinite;
+  border: 1px solid #aaa;
+  box-shadow: 0 0 1px rgba(0,0,0,.85);
+   pointer-events: all;
+}
+
+.tag-delete[data-editing="true"] {
+  visibility:visible;
+}

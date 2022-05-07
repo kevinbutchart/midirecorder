@@ -26,14 +26,7 @@ textarea {
                 <tr> <td>Date</td><td> {{rec.datetime.date()}}</td><tr>
                 <tr> <td>Time</td><td> {{rec.datetime.time().strftime("%H:%M:%S")}}</td><tr>
                 <tr> <td>Duration</td><td>{{rec.duration | round}}</td></tr>
-                <tr> <td>Tags</td><td><div class="d-grid gap-2 d-md-block">
-{% if rec.tags is not none %}
-{% for tag in rec.tags %}
-  <button class="btn btn-outline-primary btn-sm" type="button">#{{tag}}</button>
-{% endfor %}
-{% endif %}
-  <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#chooseTags"> + </button>
-</div> </td></tr>
+                <tr> <td>Tags</td><td> {% include 'choosetags.html' %} </td></tr>
                 <tr> <td colspan="2">Notes</td></tr>
                 <tr> <td colspan="2">
                 <textarea class="textarea-label" id="notes" name="notes" rows="4"></textarea>
@@ -47,7 +40,6 @@ textarea {
     <a href="#" class="btn btn-lg" style="background:lightgray" onclick="prInstance.create_synth('{{rec._id}}')">Synthesize</a>
   </div>
 
-{% include 'choosetags.html' %}
 </div>
 
 </body>

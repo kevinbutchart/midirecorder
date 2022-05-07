@@ -107,13 +107,14 @@ class CommandRunner():
         MidiPlayClient.play_midi(id)
 
     def add_tag(self, message):
-        print(message, flush=True)
-        print("here", flush=True)
         id = message['id']
-        print("here2", flush=True)
         tag_id = message['tag_id']
-        print(f"here3 {id} {tag_id}", flush=True)
         db.add_tag(id, tag_id)
+
+    def delete_tag(self, message):
+        id = message['id']
+        tag_id = message['tag_id']
+        db.delete_tag(id, tag_id)
 
     def stop(self, message):
         MidiPlayClient.stop_midi()

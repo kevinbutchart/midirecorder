@@ -42,7 +42,16 @@ var prInstance = (function() {
                 "tag_id" : tag_id
             }
             mainsocket.send(JSON.stringify(cmd))
+        },
 
+        delete_tag : function(id, tag_id)
+        {
+            var cmd = {
+                "command" : "delete_tag",
+                "id" : id,
+                "tag_id" : tag_id
+            }
+            mainsocket.send(JSON.stringify(cmd))
         },
 
         play : function(id)

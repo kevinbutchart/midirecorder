@@ -1,3 +1,12 @@
+<div class="d-grid gap-2 d-md-block">
+{% if rec.tags is not none %}
+{% for tag in rec.tags %}
+  <button class="tag-item btn btn-outline-primary btn-sm" type="button" onclick="delete_tag('{{tag}}');"><i class="tag-delete bi bi-x-circle-fill"></i>{{tag}}</button>
+{% endfor %}
+{% endif %}
+  <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#chooseTags"> + </button>
+</div>
+
 <div class="modal fade" id="chooseTags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -30,4 +39,15 @@ function add_tag() {
     prInstance.add_tag("{{rec['_id']}}", tag)
     window.location.reload(true)
 }
+
+function delete_tag(tag) {
+    prInstance.delete_tag("{{rec['_id']}}", tag)
+    window.location.reload(true)
+}
+
+document.addEventListener('long-press', function(e) {
+  e.target.setAttribute('data-editing', 'true');
+  e.target.firstElementChild.setAttribute("data-editing", "true");
+});
+
 </script>

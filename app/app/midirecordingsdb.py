@@ -100,18 +100,20 @@ class MidiRecordingsDB:
         return self.tags.find()
 
     def add_tag(self, rec_id, tag_id):
-        print(f"add tag: {rec_id} {tag_id}", flush=True)
         rec = self.get_recording(rec_id)
-        print("two", flush=True)
         tags = []
-        print("three", flush=True)
         if 'tags' in rec:
-            print("four", flush=True)
             tags = rec["tags"]
-            print(f"five{tags}", flush=True)
-        print(f"t:{tags}", flush=True)
         tags.append(tag_id)
-        print(f"tags: {tags}", flush=True)
+        rec["tags"] = tags
+        self.update_recording(rec_id, rec)
+
+    def delete_tag(self, rec_id, tag_id):
+        rec = self.get_recording(rec_id)
+        tags = []
+        if 'tags' in rec:
+            tags = rec["tags"]
+        tags.remove(tag_id)
         rec["tags"] = tags
         self.update_recording(rec_id, rec)
 
