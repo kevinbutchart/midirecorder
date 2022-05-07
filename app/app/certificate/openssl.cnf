@@ -59,13 +59,7 @@ basicConstraints     = CA:false
 subjectKeyIdentifier = hash
 keyUsage             = digitalSignature, keyEncipherment
 extendedKeyUsage     = clientAuth, serverAuth
-subjectAltName       = @alt_names
-
-[v3_req_ca]
-basicConstraints     = CA:TRUE
-subjectKeyIdentifier = hash
-keyUsage             = digitalSignature, keyEncipherment
-extendedKeyUsage     = clientAuth, serverAuth
+#authorityKeyIdentifier = keyid:always,issuer:always
 subjectAltName       = @alt_names
 
 

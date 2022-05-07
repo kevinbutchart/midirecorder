@@ -24,9 +24,16 @@ class MidiRecordingsDB:
         self.recordings.create_index("datetime")
 
     def get_recording(self, id):
-        print(id)
+        print(f"rec id {id}")
         query={"_id":ObjectId(id)}
         res=self.recordings.find_one(query)
+        print(res)
+        return res
+
+    def update_recording(self, id, recording):
+        print(id)
+        query={"_id":ObjectId(id)}
+        res=self.recordings.replace_one(query, recording, upsert=True)
         print(res)
         return res
 
@@ -91,6 +98,22 @@ class MidiRecordingsDB:
 
     def get_tags(self):
         return self.tags.find()
+
+    def add_tag(self, rec_id, tag_id):
+        print(f"add tag: {rec_id} {tag_id}", flush=True)
+        rec = self.get_recording(rec_id)
+        print("two", flush=True)
+        tags = []
+        print("three", flush=True)
+        if 'tags' in rec:
+            print("four", flush=True)
+            tags = rec["tags"]
+            print(f"five{tags}", flush=True)
+        print(f"t:{tags}", flush=True)
+        tags.append(tag_id)
+        print(f"tags: {tags}", flush=True)
+        rec["tags"] = tags
+        self.update_recording(rec_id, rec)
 
     def get_loop(self, id):
         query = { "_id" : id }

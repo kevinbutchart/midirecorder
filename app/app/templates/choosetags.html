@@ -1,0 +1,33 @@
+<div class="modal fade" id="chooseTags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Tags</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <select id="tags_select" class="form-select" multiple aria-label="multiple select example">
+          {% for tag in tags %}
+      <option value={{ tag["_id"]}} > {{tag["name"]}}</option>
+        {% endfor %}
+    </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="add_tag()">Add Tag</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+function add_tag() {
+    tsel = document.getElementById('tags_select')
+    tag = tsel.value
+    prInstance.add_tag("{{rec['_id']}}", tag)
+    window.location.reload(true)
+}
+</script>

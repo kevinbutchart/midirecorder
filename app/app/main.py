@@ -47,6 +47,11 @@ async def read_item(request: Request):
     recs = db.get_recording_sessions(limit=150)
     return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs})
 
+@app.get("/choosetags", response_class=HTMLResponse)
+async def read_item(request: Request):
+    tags = db.get_tags()
+    return templates.TemplateResponse("choosetags.html", {"request" : request, "tags": tags})
+
 @app.get("/rhythm", response_class=HTMLResponse)
 async def get_rhythm(request: Request):
     settings = db.get_metronome_settings()
@@ -72,7 +77,8 @@ def midi_to_audio(infile, outfile):
 @app.get("/recording/{id}", response_class=HTMLResponse)
 async def get_recording(request: Request, background_tasks: BackgroundTasks, id):
     rec = db.get_recording(id)
-    return templates.TemplateResponse("recording.html", {"request" : request, "rec" : rec})
+    tags = db.get_tags()
+    return templates.TemplateResponse("recording.html", {"request" : request, "rec" : rec, "tags" : tags})
 
 manager = ConnectionManager()
 
@@ -85,6 +91,7 @@ class CommandRunner():
                     "update_metronome" : self.update_metronome,
                     "stop_metronome" : self.stop_metronome,
                     "set_title" : self.set_title,
+                    "add_tag" : self.add_tag,
                     "set_favourite" : self.set_favourite,
                     "create_synth" : self.create_synth
                     }
@@ -98,6 +105,15 @@ class CommandRunner():
         print(message, flush=True)
         id = message['id']
         MidiPlayClient.play_midi(id)
+
+    def add_tag(self, message):
+        print(message, flush=True)
+        print("here", flush=True)
+        id = message['id']
+        print("here2", flush=True)
+        tag_id = message['tag_id']
+        print(f"here3 {id} {tag_id}", flush=True)
+        db.add_tag(id, tag_id)
 
     def stop(self, message):
         MidiPlayClient.stop_midi()

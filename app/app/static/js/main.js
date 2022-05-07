@@ -34,6 +34,17 @@ var prInstance = (function() {
             mainsocket.send(JSON.stringify(cmd))
         },
 
+        add_tag : function(id, tag_id)
+        {
+            var cmd = {
+                "command" : "add_tag",
+                "id" : id,
+                "tag_id" : tag_id
+            }
+            mainsocket.send(JSON.stringify(cmd))
+
+        },
+
         play : function(id)
         {
             var cmd = {
