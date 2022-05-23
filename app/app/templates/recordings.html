@@ -1,40 +1,25 @@
-<div class="grid-striped no-gutters">
-    <div class="row">
-        <div class="col-6">Title</div>
-        <div class="col-2">Secs</div>
-        <div class="col-4">Time</div>
-    </div>
-    {% set ns = namespace(sessiondate = None) %}
-    {% for session in recordings %}
-    {% if session.date() != ns.sessiondate %}
-    {% set ns.sessiondate = session.date() %}
-    <div class="table-primary">
-        <div class="col-12 no-gutters">Date: {{session.date()}}</div>
-    </div>
-    {% endif %}
+<table class="table table-hover table-striped table-borderless">
+  <tbody>
+            {% set ns = namespace(sessiondate = None) %}
+            {% for session in recordings %}
+            {% if session.date() != ns.sessiondate %}
+            {% set ns.sessiondate = session.date() %}
+            <tr class="table-primary">
+                <td colspan="3">Date: {{session.date()}}</td>
+            </tr>
+            {% endif %}
 
-    <div class="table-secondary">
-        <div class="col-12"> Time: {{session.time().strftime("%H:%M")}}</div>
-    </div>
-
-    {% for rec in recordings[session] %}
-    <div class="row" onclick="window.location='/recording/{{rec._id}}';">
-        <div class="col-12">
-        <div class="row">
-            <div class="col-6">{{rec.name}}</div>
-            <div class="col-2 align-items-end">{{rec.duration | round}}</div>
-            <div class="col-4 alighn-items-end">{{rec.datetime.time().strftime("%H:%M:%S")}}</div>
-        </div>
-        <div class="row">
-            {% for tag in rec.tags %}
-            <div class="btn-group" role="group">
-                 <button class="tag-item btn btn-outline-primary btn-sm">{{tag}}</button>
-            </div>
+            <tr class="table-secondary">
+                <td colspan="3">Time: {{session.time().strftime("%H:%M")}}</td>
+            <tr>
+            {% for rec in recordings[session] %}
+            <tr onclick="window.location='/recording/{{rec._id}}';">
+                <td>{{rec.name}}</td>
+                <td>{{rec.duration | round}}</td>
+                <td>{{rec.datetime.time().strftime("%H:%M:%S")}}</td>
+            </tr>
             {% endfor %}
-        </div>
-        </div>
-    </div>
-    <div>
-        {% endfor %}
-        {% endfor %}
-    </div>
+
+            {% endfor %}
+ </tbody>
+</table>
