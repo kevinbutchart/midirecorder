@@ -17,15 +17,14 @@
         </button>
       </div>
       <div class="modal-body">
-        <select id="tags_select" class="form-select" multiple aria-label="multiple select example">
+          <div class="btn-group btn-matrix">
           {% for tag in tags %}
-      <option value={{ tag["_id"]}} > {{tag["name"]}}</option>
-        {% endfor %}
-    </select>
+             <button type="button" class="btn btn-outline-primary btn-truncate" onclick='add_tag("{{tag["_id"]}}");'>{{tag["_id"]}}</button>
+          {% endfor %}
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="add_tag()">Add Tag</button>
       </div>
     </div>
   </div>
@@ -33,16 +32,18 @@
 
 <script>
 
-function add_tag() {
-    tsel = document.getElementById('tags_select')
-    tag = tsel.value
+function add_tag(tag) {
     prInstance.add_tag("{{rec['_id']}}", tag)
-    window.location.reload(true)
+    setTimeout(function(){
+        window.location.reload();
+    });
 }
 
 function delete_tag(tag) {
     prInstance.delete_tag("{{rec['_id']}}", tag)
-    window.location.reload(true)
+    setTimeout(function(){
+        window.location.reload();
+    });
 }
 
 document.addEventListener('long-press', function(e) {

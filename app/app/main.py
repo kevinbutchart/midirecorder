@@ -47,6 +47,11 @@ async def read_item(request: Request):
     recs = db.get_recording_sessions(limit=150)
     return templates.TemplateResponse("main.html", {"request" : request, "recordings": recs})
 
+@app.get("/recordings", response_class=HTMLResponse)
+async def read_item(request: Request, search = ""):
+    recs = db.get_recording_sessions(limit=150, search=search)
+    return templates.TemplateResponse("recordings.html", {"request" : request, "recordings": recs})
+
 @app.get("/choosetags", response_class=HTMLResponse)
 async def read_item(request: Request):
     tags = db.get_tags()
@@ -92,6 +97,7 @@ class CommandRunner():
                     "stop_metronome" : self.stop_metronome,
                     "set_title" : self.set_title,
                     "add_tag" : self.add_tag,
+                    "delete_tag" : self.delete_tag,
                     "set_favourite" : self.set_favourite,
                     "create_synth" : self.create_synth
                     }
@@ -160,13 +166,15 @@ class CommandRunner():
 
 async def consumer_handler(websocket):
     cmd_runner = CommandRunner()
-    try:
-        while True:
+    while True:
+        try:
             message = await websocket.receive_text()
             message = json.loads(message)
             cmd_runner.run(message)
-    except:
-        pass
+        except WebSocketDisconnect:
+            break
+        except Exception as e:
+            print(e)
 
 async def producer_handler(websocket):
     while True:

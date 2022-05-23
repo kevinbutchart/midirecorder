@@ -10,6 +10,7 @@ input = [ { "_id" : "moonbeams", "name" : "Moonbeams" },
         { "_id" : "bach_prelude_c_minor", "name" : "Prelude in C minor, BWV 999" },
         { "_id" : "peters_theme", "name" : "Peter's Theme" },
         { "_id" : "hearsay", "name" : "I hear what you say" },
+        { "_id" : "watermark", "name" : "Watermark" },
         ]
 
 if __name__ == "__main__":

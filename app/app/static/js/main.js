@@ -1,5 +1,8 @@
 var prInstance = (function() {
+    const cacheName = 'pianorecordercache';
+
     var showOnlyFavourites = false
+    var pendingCommands = []
     var mainsocket = new WebSocket('wss://' + location.host + '/main')
 
 
@@ -12,7 +15,35 @@ var prInstance = (function() {
             location.reload()
         }
     }
+
+    mainsocket.onconnect = function(event) {
+        while (pendingCommands.length >0){
+            cmd = pendingCommands.shift()
+            mainsocket.send(cmd)
+        }
+    }
+
+    function safe_send(str) {
+        if (mainsocket.readyState == WebSocket.CLOSED
+            || mainsocket.readyState == WebSocket.CLOSING) {
+            pendingCommands.push(str)
+            reconnect_internal()
+        } else {
+            mainsocket.send(str)
+        }
+    }
+    function reconnect_internal()
+    {
+        if (mainsocket.readyState == WebSocket.CLOSED
+            || mainsocket.readyState == WebSocket.CLOSING) {
+            mainsocket = new WebSocket('wss://' + location.host + '/main')
+        }
+    }
     return {
+        reconnect: function()
+        {
+            reconnect_internal()
+        },
         // not used yet, needs to check if new title is unique
         update_titles : function(title)
         {
@@ -31,7 +62,7 @@ var prInstance = (function() {
                 "id" : recid,
                 "title" : title
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
 
         add_tag : function(id, tag_id)
@@ -41,7 +72,7 @@ var prInstance = (function() {
                 "id" : id,
                 "tag_id" : tag_id
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
 
         delete_tag : function(id, tag_id)
@@ -51,7 +82,7 @@ var prInstance = (function() {
                 "id" : id,
                 "tag_id" : tag_id
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
 
         play : function(id)
@@ -60,7 +91,7 @@ var prInstance = (function() {
                 "command" : "play",
                 "id" : id
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         create_synth : function(id)
         {
@@ -68,7 +99,7 @@ var prInstance = (function() {
                 "command" : "create_synth",
                 "id" : id
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         synth : function(id)
         {
@@ -79,14 +110,14 @@ var prInstance = (function() {
             var cmd = {
                 "command" : "stop"
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         start_metronome : function()
         {
             var cmd = {
                 "command" : "start_metronome",
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         update_metronome : function(bpm, volume, loop_id)
         {
@@ -96,14 +127,14 @@ var prInstance = (function() {
                 "volume" : volume,
                 "loop_id" : loop_id
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         stop_metronome : function()
         {
             var cmd = {
                 "command" : "stop_metronome"
             }
-            mainsocket.send(JSON.stringify(cmd))
+            safe_send(JSON.stringify(cmd))
         },
         setfav : function(record, id) {
             var favbutton = document.getElementById(id)
@@ -117,6 +148,15 @@ var prInstance = (function() {
 
             var command = "setfavourite " + record + " " + newval
             console.log(command)
+        },
+        removeUrlFromCache: function(url) {
+            caches.open(cacheName).then(function(cache) {
+                cache.matchAll(url).then(function(response) {
+                    response.forEach(function(element, index, array) {
+                        cache.delete(element);
+                    });
+                });
+            })
         }
     };
 })();

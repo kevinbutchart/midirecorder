@@ -6,45 +6,19 @@
 <div class="container-fluid">
     {% include 'navbar.html' %}
 
-<table class="table table-hover table-striped table-borderless">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Secs</th>
-      <th scope="col">Time</th>
-    </tr>
-  </thead>
-  <tbody>
-        <ul data-role="listview">
-            {% set ns = namespace(sessiondate = None) %}
-            {% for session in recordings %}
-            {% if session.date() != ns.sessiondate %}
-            {% set ns.sessiondate = session.date() %}
-            <tr class="table-primary">
-                <td colspan="3">Date: {{session.date()}}</td>
-            </tr>
-            {% endif %}
+<input type="text" id="searchInput" onkeyup="searchTags()" placeholder="Search...">
 
-            <tr class="table-secondary">
-                <td colspan="3">Time: {{session.time().strftime("%H:%M")}}</td>
-            <tr>
-            {% for rec in recordings[session] %}
-            <tr onclick="window.location='/recording/{{rec._id}}';">
-                <td>{{rec.name}}</a></td>
-                <td>{{rec.duration | round}}</td>
-                <td>{{rec.datetime.time().strftime("%H:%M:%S")}}</td>
-            </tr>
-            {% endfor %}
+<div id="recordings">
 
-            {% endfor %}
-        </ul>
- </tbody>
+</div>
+
 </div>
 <script>
     $( document ).ready(function() {
         document.getElementById("nav_home").classList.add('active');
         registerSW();
         console.log( "ready!" );
+        $("#recordings").load("/recordings")
     });
 
     // Register the Service Worker
@@ -61,8 +35,18 @@
         }
       }
 
+  }
 
-    }
+  function searchTags() {
+      input = document.getElementById("searchInput");
+      search = input.value
+      if (search.length > 0)
+          $("#recordings").load("/recordings?search=" + search)
+      else {
+          $("#recordings").load("/recordings")
+      }
+
+  }
 
 </script>
 </body>

@@ -70,3 +70,42 @@
 .tag-delete[data-editing="true"] {
   visibility:visible;
 }
+
+.btn-matrix {
+    flex-wrap: wrap;
+}
+/* Arrange buttons */
+.btn-matrix > .btn {
+	width: 33%; /* force buttons to have the same width regardless of content */
+}
+.btn-matrix > .btn:nth-child(3n + 4) {
+	clear: left; /* force the button to start a new row of the matrix
+	                (because .btn adds the `float: left;` property) */
+	margin-left: 0; /* because .btn-group adds `margin-left: -1px;` to all buttons */
+}
+.btn-matrix > .btn:nth-child(n + 4) {
+	margin-top: -1px; /* superimpose borders of the buttons from adjacent rows */
+}
+
+/* Fix border radius */
+.btn-matrix > .btn:first-child {
+	border-bottom-left-radius: 0;
+}
+.btn-matrix > .btn:nth-child(3) {
+	border-top-right-radius: 4px !important;
+}
+.btn-matrix > .btn:nth-last-child(3) {
+	border-bottom-left-radius: 4px !important;
+}
+.btn-matrix > .btn:last-child {
+	border-top-right-radius: 0;
+}
+
+.btn-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.grid-striped .row:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.05);
+}

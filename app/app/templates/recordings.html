@@ -1,35 +1,40 @@
-<div class='dateheader'> {{dirname}} </div>
-<table>
-<thead>
-<th> Name </th>
-<th> Duration </th>
-<th> Title </th>
-<th> Date </th>
-<th> Time </th>
-<th> Favourite </th>
-<th> Play </th>
-<th> Stop </th>
+<div class="grid-striped no-gutters">
+    <div class="row">
+        <div class="col-6">Title</div>
+        <div class="col-2">Secs</div>
+        <div class="col-4">Time</div>
+    </div>
+    {% set ns = namespace(sessiondate = None) %}
+    {% for session in recordings %}
+    {% if session.date() != ns.sessiondate %}
+    {% set ns.sessiondate = session.date() %}
+    <div class="table-primary">
+        <div class="col-12 no-gutters">Date: {{session.date()}}</div>
+    </div>
+    {% endif %}
 
-</thead>
-{% for rec in recordings %}
-<tr>
-    <td> {{rec.name}} </td>
-    <td> {{rec.duration}} </td>
-    <td> {{rec.title}} </td>
-    <td> {{rec.date}} </td>
-    <td> {{rec.time}} </td>
-     {% set fullname = directory + '/' + rec.name %}
-     {% if rec.favourite %}
-     {% set favstyle='<i class="fas fa-star fav" /i>' %}
-     {% set favourite = 'true' %}
-     {% else %}
-     {% set favstyle='<i class="far fa-star fav" /i>' %}
-     {% set favourite = 'false' %}
-     {% endif %}
+    <div class="table-secondary">
+        <div class="col-12"> Time: {{session.time().strftime("%H:%M")}}</div>
+    </div>
 
-     <td><button id="fav-{{rec.name}}" data-fav="{{favourite}}" class=btnfav onclick="setfav('{{fullname}}', this.id)"> {{favstyle}}</button></td>
-     <td><button class=btn onclick="play('{{fullname}}')"><i class="fas fa-play" /></button></td>
-     <td><button class=btn onclick="stop()"><i class="fas fa-stop" /i></button></td>
-</tr>
-{% endfor %}
-</table>
+    {% for rec in recordings[session] %}
+    <div class="row" onclick="window.location='/recording/{{rec._id}}';">
+        <div class="col-12">
+        <div class="row">
+            <div class="col-6">{{rec.name}}</div>
+            <div class="col-2 align-items-end">{{rec.duration | round}}</div>
+            <div class="col-4 alighn-items-end">{{rec.datetime.time().strftime("%H:%M:%S")}}</div>
+        </div>
+        <div class="row">
+            {% for tag in rec.tags %}
+            <div class="btn-group" role="group">
+                 <button class="tag-item btn btn-outline-primary btn-sm">{{tag}}</button>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    <div>
+        {% endfor %}
+        {% endfor %}
+    </div>

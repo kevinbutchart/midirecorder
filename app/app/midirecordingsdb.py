@@ -5,6 +5,7 @@ from collections import OrderedDict
 import os
 import sys
 import base64
+import re
 
 import pymongo
 
@@ -81,11 +82,15 @@ class MidiRecordingsDB:
             recordings_dict[date] = day_recordings
         return recordings_dict
 
-    def get_recording_sessions(self, limit = 0):
+    def get_recording_sessions(self, limit = 0, search=""):
         recordings_dict = OrderedDict()
-        query = self.recordings.find().sort("datetime", -1).limit(limit)
+        if len(search) > 0:
+            query = { "tags" : re.compile(f".*{search}.*", re.IGNORECASE) }
+            res = self.recordings.find(query).sort("datetime", -1).limit(limit)
+        else:
+            res = self.recordings.find().sort("datetime", -1).limit(limit)
 
-        for instance in query:
+        for instance in res:
             session = instance["session"]
             session_recordings = recordings_dict.get(session, [])
             session_recordings.append( instance )

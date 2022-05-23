@@ -81,7 +81,14 @@ connectSlider("volumeRange", "volume");
 
 </div>
 <script>
+    function handleVisibilityChange() {
+        console.log(document.visibilityState)
+        if (document.visibilityState === "visible") {
+            prInstance.reconnect()
+        }
+    }
     $( document ).ready(function() {
+        //document.addEventListener("visibilitychange", handleVisibilityChange, false);
         document.getElementById("nav_rhythm").classList.add('active');
         var loopList = document.getElementById("loopList");
         loopList.value = {{settings['loop_id']}}
