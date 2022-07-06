@@ -25,13 +25,3 @@ self.addEventListener('fetch', function (event) {
         })
     )
 })
-
-function removeUrlFromCache(url) {
-    caches.open(cacheName).then(function(cache) {
-        cache.matchAll(url).then(function(response) {
-            response.forEach(function(element, index, array) {
-                cache.delete(element);
-            });
-        });
-    })
-}
